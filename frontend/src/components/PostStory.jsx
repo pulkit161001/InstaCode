@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import { Dialog } from "@mui/material";
-import leetcode_dp from "../assets/leetcode_dp.png";
+import leetcode_dp from "../assets/LeetCode_dp.png";
 import { moreIcon, playIcon, pauseIcon } from "../utils/SvgIcons";
 
 //TO-DO - in the bottom tag a smalle button should be there with a tag icon (when clicked it will show topic tags)
