@@ -34,14 +34,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-if (process.env.NODE_ENV === "production") {
-	app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-	app.get("*", (req, res) => {
-		res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-	});
-}
-
 app.get("/studyplan", async (req, res) => {
 	try {
 		const userDetails = await getStudyPlan();
@@ -410,6 +402,14 @@ app.get("/:username/recent/:limit", async (req, res) => {
 		res.status(500).json({ error: "Failed to fetch LeetCode user details" });
 	}
 });
+
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+	app.get("*", (req, res) => {
+		res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+	});
+}
 
 app.listen(PORT, () => {
 	console.log(`App is running on PORT ${PORT}`);
