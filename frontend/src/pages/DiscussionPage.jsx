@@ -1,35 +1,33 @@
-import React, { useState, useEffect, useCallback } from "react";
 import {
 	Avatar,
-	Tabs,
-	Tab,
-	TextField,
-	Select,
-	MenuItem,
 	FormControl,
 	InputLabel,
-	Button,
+	MenuItem,
+	Select,
+	Tab,
+	Tabs,
+	TextField,
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import {
-	MoreHorizontal,
 	Heart,
-	MessageCircle,
 	LucideAlignEndHorizontal,
+	MessageCircle,
+	MoreHorizontal,
+	PanelTopClose,
+	PanelTopOpen,
+	Pin,
 	Share,
 	Stars,
-	Pin,
-	PanelTopOpen,
-	PanelTopClose,
 } from "lucide-react";
+import React, { useCallback, useEffect, useState } from "react";
 import default_avatar from "../assets/default_avatar.jpg";
-import { axiosInstance } from "../lib/axios.js";
-import CircularProgress from "@mui/material/CircularProgress";
-import { PulseLoader } from "react-spinners";
 import {
 	calculateTimeAgo,
 	formatCount,
 	formatFullDate,
 } from "../constants/calculation.js";
+import { axiosInstance } from "../lib/axios.js";
 
 const TweetBox = ({ tweet, tab, setSelectedTags, selectedTags }) => {
 	const author = tweet.node.post.author;
