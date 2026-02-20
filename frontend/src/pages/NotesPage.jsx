@@ -21,6 +21,34 @@ const NotesPage = () => {
     }
   }, []);
 
+  const handleAddNoteClick = () => {
+    setEditingId(null);
+    setEditingNote({ title: '', description: '' });
+    setShowModal(true);
+  };
+
+  const handleSaveModal = () => {
+    if (!editingNote.title.trim() || !editingNote.description.trim()) {
+      alert('Please fill in both title and description');
+      return;
+    }
+
+    const updatedNotes = editingId
+      ? notes.map((n) => (n.id === editingId ? { ...n, ...editingNote } : n))
+      : [...notes, { id: Date.now(), ...editingNote }];
+
+    setNotes(updatedNotes);
+    localStorage.setItem('instacode_notes', JSON.stringify(updatedNotes));
+    setShowModal(false);
+    setEditingNote({ title: '', description: '' });
+  };
+
+  const handleCancelModal = () => {
+    setShowModal(false);
+    setEditingNote({ title: '', description: '' });
+    setEditingId(null);
+  };
+
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
       <div className="mb-6">
@@ -114,8 +142,53 @@ const NotesPage = () => {
         )}
       </div>
 
+      {/* Add/Edit Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className={`rounded-lg p-6 max-w-md w-full ${isDarkMode ? "bg-gray-800" : "bg-white"}`}>
+            <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? "text-white" : "text-gray-800"}`}>
+              {editingId ? 'Edit Note' : 'Add Note'}
+            </h2>
+
+            <input
+              type="text"
+              placeholder="Note title"
+              value={editingNote.title}
+              onChange={(e) => setEditingNote({ ...editingNote, title: e.target.value })}
+              className={`w-full px-3 py-2 mb-4 rounded border ${isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"}`}
+            />
+
+            <textarea
+              placeholder="Note description"
+              value={editingNote.description}
+              onChange={(e) => setEditingNote({ ...editingNote, description: e.target.value })}
+              className={`w-full px-3 py-2 mb-4 rounded border ${isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"}`}
+              rows="5"
+            />
+
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => handleCancelModal()}
+                className={`px-4 py-2 rounded transition-colors ${isDarkMode ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-800"}`}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleSaveModal()}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Add Note Button */}
-      <button className={`mt-6 w-full px-4 py-2 rounded-lg transition-colors duration-200 ${isDarkMode ? "bg-blue-700 hover:bg-blue-600 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}>
+      <button
+        onClick={() => handleAddNoteClick()}
+        className={`mt-6 w-full px-4 py-2 rounded-lg transition-colors duration-200 ${isDarkMode ? "bg-blue-700 hover:bg-blue-600 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}`}
+      >
         Add Note
       </button>
     </div>
