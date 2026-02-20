@@ -13,8 +13,10 @@ import {
 	sendIcon,
 } from "../utils/SvgIcons";
 import PostStory from "./PostStory";
+import { useTheme } from "../hooks/useTheme";
 
 const PostsContainer = () => {
+	const { isDarkMode } = useTheme();
 	const [loading, setLoading] = useState(false);
 	const [studyplan, setStudyPlan] = useState([]);
 
@@ -52,20 +54,25 @@ const PostsContainer = () => {
 	return (
 		<div className="flex flex-col w-full lg:w-2/3 sm:px-8 mb-8">
 			{loading ? (
-				// Show a loading text or animation
-				<div>Loading...</div>
+				// Show a centered loading animation
+				<div className="flex justify-center items-center min-h-screen w-full">
+					<div className="relative w-12 h-12">
+						<div className="absolute inset-0 rounded-full border-4 border-gray-300"></div>
+						<div className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-500 animate-spin"></div>
+					</div>
+				</div>
 			) : (
 				//TODO - Skleton, InfinityScroll(Pagination)
 				//https://github1s.com/jigar-sable/instagram-mern/blob/main/frontend/src/components/Home/PostsContainer.jsx
 				// Display study plans once loading is complete
 				<div className="w-full h-full mt-1 flex flex-col space-y-4">
-					<div className="w-full">
+					<div className={`rounded-lg p-1 mb-6 w-full border ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}>
 						<PostStory />
 					</div>
 					{studyplan.map((plan, index) => (
 						<React.Fragment key={index}>
 							<PostItem studyplan={plan} />
-							<hr className="border-t border-gray-200 mt-4" />
+							<hr className={`border-t mt-4 ${isDarkMode ? "border-gray-700" : "border-gray-200"}`} />
 						</React.Fragment>
 					))}
 					<CaughtUpMessage />
@@ -75,15 +82,18 @@ const PostsContainer = () => {
 	);
 };
 
-const CaughtUpMessage = () => (
-	<div className="flex flex-col items-center text-center text-gray-600 mt-6">
+const CaughtUpMessage = () => {
+	const { isDarkMode } = useTheme();
+	return (
+	<div className={`flex flex-col items-center text-center mt-6 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
 		<div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-full h-12 w-12 flex items-center justify-center text-white text-2xl mb-2">
 			✓
 		</div>
 		<div className="font-semibold">You're all caught up.</div>
 		<div className="text-sm">You've seen all new study plans.</div>
 	</div>
-);
+	);
+};
 
 function buildTitleFromSlug(slug) {
 	return slug
@@ -93,6 +103,7 @@ function buildTitleFromSlug(slug) {
 }
 
 function PostItem({ studyplan }) {
+	const { isDarkMode } = useTheme();
 	const [openList, setOpenList] = useState(false);
 	const [problemlist, setProblemList] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -126,7 +137,7 @@ function PostItem({ studyplan }) {
 	};
 
 	return (
-		<div className="bg-white rounded-lg p-1 mb-6 w-full">
+		<div className={`rounded-lg p-1 mb-6 w-full ${isDarkMode ? "bg-gray-800" : "bg-white"}`}>
 			{/* Top section with default avatar and LeetCode text */}
 			<div className="flex items-center justify-between mb-2">
 				<div className="flex items-center">
@@ -135,8 +146,8 @@ function PostItem({ studyplan }) {
 						alt="Avatar"
 						className="w-8 h-8 rounded-full border-2 border-grey-100 mr-2"
 					/>
-					<span className="font-semibold mr-1">LeetCode</span>
-					<span className="text-gray-400" title={"this is of no use"}>
+					<span className={`font-semibold mr-1 ${isDarkMode ? "text-white" : ""}`}>LeetCode</span>
+					<span className={isDarkMode ? "text-gray-500" : "text-gray-400"} title={"this is of no use"}>
 						• 2d
 					</span>
 				</div>
@@ -189,7 +200,7 @@ function PostItem({ studyplan }) {
 
 			{/* Question count text */}
 			<div
-				className="text-sm mb-2 font-semibold"
+				className={`text-sm mb-2 font-semibold ${isDarkMode ? "text-white" : ""}`}
 				onClick={() => setOpenList(true)}
 			>
 				{studyplan.questionNum} problems
@@ -197,17 +208,17 @@ function PostItem({ studyplan }) {
 
 			<div className="flex flex-col items-start flex-1">
 				<div className="flex items-center mb-1">
-					<div className="text-sm font-semibold mr-2">LeetCode</div>
+					<div className={`text-sm font-semibold mr-2 ${isDarkMode ? "text-white" : ""}`}>LeetCode</div>
 					<div>
-						<span className="text-sm mr-1">{studyplan.name}</span>
+						<span className={`text-sm mr-1 ${isDarkMode ? "text-gray-300" : ""}`}>{studyplan.name}</span>
 					</div>
 				</div>
-				<div className="text-sm">{studyplan.highlight}</div>
+				<div className={`text-sm ${isDarkMode ? "text-gray-400" : ""}`}>{studyplan.highlight}</div>
 			</div>
 
 			{/* View all problems link */}
 			<div
-				className="ml-auto text-gray-400 cursor-pointer text-base"
+				className={`ml-auto cursor-pointer text-base ${isDarkMode ? "text-gray-500" : "text-gray-400"}`}
 				onClick={handleOpenDialog}
 			>
 				view all {studyplan.questionNum} problems
@@ -218,18 +229,27 @@ function PostItem({ studyplan }) {
 				onClose={() => setOpenList(false)}
 				maxWidth="xl"
 				PaperProps={{
-					style: { borderRadius: "10px", overflow: "hidden" },
+					style: {
+						borderRadius: "10px",
+						overflow: "hidden",
+						backgroundColor: isDarkMode ? "#1f2937" : "white",
+					},
 				}}
 			>
 				<div
-					className="flex flex-col items-start p-4 w-80 overflow-y-scroll"
+					className={`flex flex-col items-start p-4 w-80 overflow-y-scroll ${isDarkMode ? "bg-gray-800" : ""}`}
 					style={{
 						maxHeight: "400px",
 						scrollbarWidth: "none", // for Firefox
 					}}
 				>
 					{loading ? (
-						<p>Loading...</p>
+						<div className="flex justify-center items-center w-full h-24">
+							<div className="relative w-8 h-8">
+								<div className="absolute inset-0 rounded-full border-3 border-gray-300"></div>
+								<div className={`absolute inset-0 rounded-full border-3 border-transparent border-t-blue-500 animate-spin ${isDarkMode ? "border-t-blue-400" : ""}`}></div>
+							</div>
+						</div>
 					) : problemlist.length > 0 ? (
 						problemlist.map((problem, index) => (
 							<a
@@ -239,8 +259,10 @@ function PostItem({ studyplan }) {
 								rel="noopener noreferrer"
 								className="w-full"
 							>
-								<div className="flex justify-between items-center w-full py-2.5 px-4 border-b last:border-none hover:bg-gray-50">
-									<span className="text-left text-gray-700">
+								<div className={`flex justify-between items-center w-full py-2.5 px-4 border-b last:border-none ${
+									isDarkMode ? "border-gray-700 hover:bg-gray-700" : "hover:bg-gray-50"
+								}`}>
+									<span className={`text-left ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
 										{problem.title}
 									</span>
 									<span
@@ -252,7 +274,7 @@ function PostItem({ studyplan }) {
 							</a>
 						))
 					) : (
-						<p>No problems found.</p>
+						<p className={isDarkMode ? "text-gray-300" : ""}>No problems found.</p>
 					)}
 				</div>
 			</Dialog>
