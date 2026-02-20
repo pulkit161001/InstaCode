@@ -57,19 +57,26 @@ const RightSidebar = () => {
 
         {profileData && !loading && !error && (
           <div className="flex items-center gap-2 py-3">
-            <img
-              src={profileData.userAvatar}
-              alt={`${profileData.realName}'s avatar`}
-              className="w-10 h-10 rounded-full flex-shrink-0"
-            />
-            <div className="flex-1 min-w-0">
-              <div className={`text-sm font-bold ${isDarkMode ? "text-white" : "text-black"}`}>
-                {profileData.username}
+            <a
+              href="https://leetcode.com/u/pulkit161001/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 flex-1 min-w-0"
+            >
+              <img
+                src={profileData.userAvatar}
+                alt={`${profileData.realName}'s avatar`}
+                className="w-10 h-10 rounded-full flex-shrink-0"
+              />
+              <div className="flex-1 min-w-0">
+                <div className={`text-sm font-bold ${isDarkMode ? "text-white" : "text-black"}`}>
+                  {profileData.username}
+                </div>
+                <div className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+                  {profileData.realName}
+                </div>
               </div>
-              <div className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
-                {profileData.realName}
-              </div>
-            </div>
+            </a>
             <a
               href="https://leetcode.com/u/pulkit161001/"
               target="_blank"
