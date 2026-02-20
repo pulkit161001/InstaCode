@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { contributions } from "../constants/contributions";
+import { useEffect, useState } from "react";
 import { useTheme } from "../hooks/useTheme";
 import { axiosInstance } from "../lib/axios";
 
@@ -24,8 +23,7 @@ const RightSidebar = () => {
         setProfileData({
           username: matchedUser.username || LEETCODE_USERNAME,
           userAvatar: userProfile.userAvatar || "",
-          realName: userProfile.realName || "LeetCode User",
-          reputation: userProfile.reputation || 0
+          realName: userProfile.realName || "LeetCode User"
         });
       } catch (err) {
         console.error("Error fetching profile:", err);
@@ -69,7 +67,7 @@ const RightSidebar = () => {
                 {profileData.username}
               </div>
               <div className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
-                {profileData.realName} - {profileData.reputation} Reputation
+                {profileData.realName}
               </div>
             </div>
             <a
