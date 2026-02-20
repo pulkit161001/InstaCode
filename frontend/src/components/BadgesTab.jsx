@@ -345,7 +345,7 @@ function BadgeItem({
 
             <div className="">
               {/* like comment container */}
-              <div className="flex flex-col px-3 space-y-1 border-b border-t pb-2">
+              <div className={`flex flex-col px-3 space-y-1 pb-2 ${isDarkMode ? 'border-b border-t border-gray-700' : 'border-b border-t border-gray-300'}`}>
                 <div className="flex items-center justify-between py-2">
                   <div className="flex space-x-4">
                     <Heart color={isDarkMode ? "white" : "black"} />
