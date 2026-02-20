@@ -120,7 +120,7 @@ const PostStory = () => {
 									alt="Daily Challenge"
 								/>
 							</div>
-							<span className="text-xs font-medium text-white mt-2">
+							<span className={`text-xs font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'} mt-2`}>
 								daily.chall...
 							</span>
 						</div>
