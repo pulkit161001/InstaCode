@@ -216,7 +216,7 @@ const ProfilePage = () => {
 								<SocialMediaStory userData={userData} />
 							</div>
 							<div className="border-t">
-								<Tabs setSection={setSection} section={section} />
+								<Tabs setSection={setSection} section={section} isDarkMode={isDarkMode} />
 							</div>
 
 							<div className="mt-4 w-full">{renderActiveTabContent}</div>
@@ -535,15 +535,17 @@ const ProfileDetails = React.memo(
 	}
 );
 
-function Tabs({ section, setSection }) {
+function Tabs({ section, setSection, isDarkMode }) {
 	// TO-DO - discussion tab
 	return (
 		<div className="flex gap-12 justify-center ">
 			<span
 				onClick={() => setSection("badges")}
 				className={`${
-					section === "badges" ? "border-t border-black" : "text-gray-400"
-				} 
+					section === "badges"
+						? isDarkMode ? "border-t border-gray-400 text-white" : "border-t border-black text-black"
+						: isDarkMode ? "text-gray-400" : "text-gray-600"
+				}
           py-3 cursor-pointer flex items-center text-[13px] uppercase gap-3 tracking-[1px] font-medium`}
 			>
 				{postsIconFill} Badges
@@ -551,7 +553,9 @@ function Tabs({ section, setSection }) {
 			<span
 				onClick={() => setSection("streak")}
 				className={`${
-					section === "streak" ? "border-t border-black" : "text-gray-400"
+					section === "streak"
+						? isDarkMode ? "border-t border-gray-400 text-white" : "border-t border-black text-black"
+						: isDarkMode ? "text-gray-400" : "text-gray-600"
 				} py-3 cursor-pointer flex items-center text-[13px] uppercase gap-3 tracking-[1px] font-medium`}
 			>
 				{streakIcon} Streak
@@ -559,7 +563,9 @@ function Tabs({ section, setSection }) {
 			<span
 				onClick={() => setSection("list")}
 				className={`${
-					section === "list" ? "border-t border-black" : "text-gray-400"
+					section === "list"
+						? isDarkMode ? "border-t border-gray-400 text-white" : "border-t border-black text-black"
+						: isDarkMode ? "text-gray-400" : "text-gray-600"
 				} py-3 cursor-pointer flex items-center text-[13px] uppercase gap-3 tracking-[1px] font-medium`}
 			>
 				{problemListIcon} List
