@@ -15,6 +15,7 @@ import { Heart, MessageCircle, Send } from "lucide-react";
 import positiveComments from "../constants/comments";
 import default_avatar from "../assets/default_avatar.jpg";
 import AboutThisAccount from "../layouts/AboutThisAccount";
+import { useTheme } from "../hooks/useTheme";
 
 const badgeOrder = ["Guardian", "Knight", "Annual Badge"];
 
@@ -100,6 +101,7 @@ function BadgeItem({
   skillTags,
   userData,
 }) {
+  const { isDarkMode } = useTheme();
   const iconUrl = badge.icon.startsWith("http")
     ? badge.icon
     : `https://leetcode.com${badge.icon}`;
@@ -147,7 +149,9 @@ function BadgeItem({
     <>
       <div
         onClick={openDialog}
-        className="group aspect-square flex justify-center items-center bg-gray-300 hover:bg-gray-400 cursor-pointer relative" // Add `relative` here
+        className={`group aspect-square flex justify-center items-center cursor-pointer relative ${
+          isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-300 hover:bg-gray-400'
+        }`}
       >
         <img
           draggable="false"
@@ -174,6 +178,11 @@ function BadgeItem({
         open={openImage}
         onClose={() => setOpenImage(false)}
         maxWidth="xl"
+        PaperProps={{
+          style: {
+            backgroundColor: isDarkMode ? "#1f2937" : "white",
+          },
+        }}
       >
         <div className="flex sm:flex-row flex-col max-w-7xl">
           <div
@@ -193,9 +202,13 @@ function BadgeItem({
             />
           </div>
 
-          <div className="flex flex-col justify-between border w-full max-w-xl rounded bg-white">
+          <div className={`flex flex-col justify-between border w-full max-w-xl rounded ${
+            isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"
+          }`}>
             {/* id with menu icon */}
-            <div className="flex justify-between px-3 py-2 border-b items-center">
+            <div className={`flex justify-between px-3 py-2 border-b items-center ${
+              isDarkMode ? "border-gray-700" : ""
+            }`}>
               {/* icon with name */}
               <div className="flex space-x-3 items-center">
                 <div>
@@ -206,13 +219,13 @@ function BadgeItem({
                     alt={username}
                   />
                 </div>
-                <div className="text-black text-sm">{username}</div>
+                <div className={`text-sm ${isDarkMode ? "text-white" : "text-black"}`}>{username}</div>
                 <span className="mx-1">{" • "}</span>{" "}
                 {/* Space added around bullet */}
-                <div className="text-black text-sm">{country}</div>
+                <div className={`text-sm ${isDarkMode ? "text-white" : "text-black"}`}>{country}</div>
               </div>
               <span
-                className="cursor-pointer"
+                className={`cursor-pointer ${isDarkMode ? "text-white" : "text-black"}`}
                 onClick={() => setMoreOptions(true)}
               >
                 {metaballsMenu}
@@ -224,11 +237,16 @@ function BadgeItem({
               onClose={() => setMoreOptions(false)}
               onClick={() => setMoreOptions(false)}
               maxWidth="xl"
+              PaperProps={{
+                style: {
+                  backgroundColor: isDarkMode ? "#1f2937" : "white",
+                },
+              }}
             >
               <div className="flex flex-col items-center w-80">
                 <button
                   onClick={() => handleCopy()}
-                  className=" font-normal border-b py-2.5 w-full hover:bg-gray-50"
+                  className={`font-normal border-b py-2.5 w-full ${isDarkMode ? 'text-white hover:bg-gray-700 border-gray-700' : 'text-black hover:bg-gray-100 border-gray-300'}`}
                 >
                   Copy Link
                 </button>
@@ -236,11 +254,11 @@ function BadgeItem({
                   onClick={() => {
                     setShowAboutProfile(true);
                   }}
-                  className=" font-normal border-b py-2.5 w-full hover:bg-gray-50"
+                  className={`font-normal border-b py-2.5 w-full ${isDarkMode ? 'text-white hover:bg-gray-700 border-gray-700' : 'text-black hover:bg-gray-100 border-gray-300'}`}
                 >
                   About this account
                 </button>
-                <button className=" font-normal  py-2.5 w-full hover:bg-gray-50">
+                <button className={`font-normal py-2.5 w-full ${isDarkMode ? 'text-white hover:bg-gray-700' : 'text-black hover:bg-gray-100'}`}>
                   Cancel
                 </button>
               </div>
@@ -266,25 +284,25 @@ function BadgeItem({
                 </div>
                 <div className="flex flex-col items-start flex-1">
                   <div className="flex items-center">
-                    <div className="text-sm font-semibold mr-2">{username}</div>
-                    <span className="text-sm mr-1">
+                    <div className={`text-sm font-semibold mr-2 ${isDarkMode ? "text-white" : "text-black"}`}>{username}</div>
+                    <span className={`text-sm mr-1 ${isDarkMode ? "text-white" : "text-black"}`}>
                       {badge.displayName} {"🚀"}
                     </span>
-                    <span className="text-sm" style={{ color: "#b6e0ff" }}>
+                    <span className={`text-sm ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
                       {" @LeetCode"}
                     </span>
                   </div>
                   <div>
-                    <span className="text-sm" style={{ color: "#b6e0ff" }}>
+                    <span className={`text-sm ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
                       {badgeNameTag}
                     </span>
                     {skillTags.map((skills, idx) => (
-                      <span key={idx} className="" style={{ color: "#b6e0ff" }}>
+                      <span key={idx} className={isDarkMode ? 'text-blue-400' : 'text-blue-600'}>
                         {` #${skills}`}
                       </span>
                     ))}
                   </div>
-                  <span className="font-light text-sm text-gray-300 mt">
+                  <span className={`font-light text-sm mt ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                     {calculateTimeAgo(badge.creationDate)}
                   </span>
                 </div>
@@ -305,10 +323,10 @@ function BadgeItem({
                     </div>
                     <div className="flex flex-col items-start flex-1">
                       <div className="flex items-center">
-                        <div className="text-sm font-semibold mr-2">
+                        <div className={`text-sm font-semibold mr-2 ${isDarkMode ? "text-white" : "text-black"}`}>
                           {comment.username}
                         </div>
-                        <span className="text-sm mr-1">{comment.comment}</span>
+                        <span className={`text-sm mr-1 ${isDarkMode ? "text-white" : "text-black"}`}>{comment.comment}</span>
                       </div>
                       <div></div>
                       <span className="font-light text-sm text-gray-300 mt">
@@ -318,7 +336,7 @@ function BadgeItem({
                       </span>
                     </div>
                     <div className="w-8 flex items-center justify-between">
-                      <Heart className="h-4 w-4" />
+                      <Heart className="h-4 w-4" color={isDarkMode ? "white" : "black"} />
                     </div>
                   </div>
                 ))}
@@ -330,28 +348,28 @@ function BadgeItem({
               <div className="flex flex-col px-3 space-y-1 border-b border-t pb-2">
                 <div className="flex items-center justify-between py-2">
                   <div className="flex space-x-4">
-                    <Heart />
-                    <MessageCircle />
+                    <Heart color={isDarkMode ? "white" : "black"} />
+                    <MessageCircle color={isDarkMode ? "white" : "black"} />
                     {/* <button>{metaballsMenu}</button> */}
                     <a
                       href={`https://leetcode.com/u/${username}`}
                       target="_blank"
                       rel="noopener noreferrer" // Security best practice when using target="_blank"
                     >
-                      <Send />
+                      <Send color={isDarkMode ? "white" : "black"} />
                     </a>
                   </div>
                   {/* <button>{metaballsMenu}</button> */}
                 </div>
 
                 {/* likes  */}
-                <span className="w-full text-sm">
+                <span className={`w-full text-sm ${isDarkMode ? "text-white" : "text-black"}`}>
                   Viewed by <span className="font-semibold">{username}</span>{" "}
                   and <span className="font-semibold">{views}</span> others
                 </span>
 
                 {/* time */}
-                <span className="text-xs text-gray-500">{fullDateFormat}</span>
+                <span className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>{fullDateFormat}</span>
               </div>
             </div>
           </div>

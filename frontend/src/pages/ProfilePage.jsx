@@ -173,6 +173,7 @@ const ProfilePage = () => {
 									borderRadius: "12px",
 									width: "400px",
 									maxWidth: "90%",
+									backgroundColor: isDarkMode ? "#1f2937" : "white",
 								},
 							}}
 						>
