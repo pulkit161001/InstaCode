@@ -18,13 +18,13 @@ import { ClickAwayListener } from "@mui/material";
 
 // Navigation items for sidebar and mobile drawer
 export const navigationItems = [
-  { icon: <Home />, label: "Home", path: "/" },
-  { icon: <Search />, label: "Search", path: null },
-  { icon: <MessageCircle/>, label: "Messages", path: "/messages" },
-  { icon: playgroundIcon, label: "Playground", path: "/playground" },
-  { icon: createIcon, label: "Create", path: "/notes" },
-  { icon: discussionIcon, label: "Discuss", path: "/discuss" },
-  { icon: <AlignJustify />, label: "More", path: null },
+  { icon: <Home />, label: "Home", path: "/", section: "main" },
+  { icon: <Search />, label: "Search", path: null, section: "main" },
+  { icon: <MessageCircle/>, label: "Messages", path: "/messages", section: "main" },
+  { icon: playgroundIcon, label: "Playground", path: "/playground", section: "main" },
+  { icon: createIcon, label: "Create", path: "/notes", section: "main" },
+  { icon: discussionIcon, label: "Discuss", path: "/discuss", section: "main" },
+  { icon: <AlignJustify />, label: "More", path: null, section: "bottom" },
 ];
 
 // More menu items
@@ -44,6 +44,17 @@ const Sidebar = () => {
   const [theme, setTheme] = useRecoilState(themeAtom);
   const [selectedItem, setSelectedItem] = useState("Home");
   const isLightMode = theme === "light";
+
+  // Filter navigation items by section for better organization
+  const mainNavItems = useMemo(
+    () => navigationItems.filter(item => item.section === "main"),
+    []
+  );
+
+  const bottomNavItems = useMemo(
+    () => navigationItems.filter(item => item.section === "bottom"),
+    []
+  );
 
   const sidebarHandler = (label) => {
     setShowRightSidebar(false);
@@ -79,9 +90,9 @@ const Sidebar = () => {
 
       {/* Main button aligned to Top */}
       <div className="flex-grow">
-        {navigationItems.slice(0, navigationItems.length - 1).map((item, index) => (
+        {mainNavItems.map((item) => (
           <div
-            key={index}
+            key={item.label}
             onClick={() => sidebarHandler(item.label)}
             className={`flex items-center gap-3 relative cursor-pointer rounded-lg p-3 my-3 transition-transform duration-200 transform hover:scale-105 ${
               isLightMode ? "hover:bg-gray-100" : "hover:bg-gray-800"
@@ -115,21 +126,24 @@ const Sidebar = () => {
 
       {/* More button aligned to bottom */}
       <div className="mb-4">
-        <div
-          onClick={() => sidebarHandler("More")}
-          className={`flex items-center gap-3 relative cursor-pointer rounded-lg p-3 my-3 transition-transform duration-200 transform hover:scale-105 ${
-            isLightMode ? "hover:bg-gray-100" : "hover:bg-gray-800"
-          }`}
-        >
-          <span className={`${isLightMode ? "text-gray-400" : "text-gray-500"}`}>
-            {React.cloneElement(navigationItems[navigationItems.length - 1].icon, {
-              className: "w-5 h-5",
-            })}
-          </span>
-          <span className={isLightMode ? "" : "text-gray-200"}>
-            {navigationItems[navigationItems.length - 1].label}
-          </span>
-        </div>
+        {bottomNavItems.map((item) => (
+          <div
+            key={item.label}
+            onClick={() => sidebarHandler(item.label)}
+            className={`flex items-center gap-3 relative cursor-pointer rounded-lg p-3 my-3 transition-transform duration-200 transform hover:scale-105 ${
+              isLightMode ? "hover:bg-gray-100" : "hover:bg-gray-800"
+            }`}
+          >
+            <span className={`${isLightMode ? "text-gray-400" : "text-gray-500"}`}>
+              {React.cloneElement(item.icon, {
+                className: "w-5 h-5",
+              })}
+            </span>
+            <span className={isLightMode ? "" : "text-gray-200"}>
+              {item.label}
+            </span>
+          </div>
+        ))}
       </div>
 
       {showRightSidebar && (
@@ -146,9 +160,9 @@ const Sidebar = () => {
             isLightMode ? "bg-gray-100 text-gray-700" : "bg-gray-800 text-gray-200"
           }`}>
             <div className="p-2">
-              {moreMenuItems.map((item, index) => (
+              {moreMenuItems.map((item) => (
                 <div
-                  key={index}
+                  key={item.label instanceof Array ? item.label[0] : item.label}
                   onClick={() => {
                     if (item.action === "theme") {
                       setTheme(isLightMode ? "dark" : "light");
