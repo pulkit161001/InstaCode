@@ -8,6 +8,7 @@ const NotesPage = () => {
   const [editingId, setEditingId] = useState(null);
   const [editingNote, setEditingNote] = useState({ title: '', description: '' });
   const [showDescription, setShowDescription] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const { isDarkMode } = useTheme();
 
   useEffect(() => {
@@ -73,6 +74,21 @@ const NotesPage = () => {
   const handleCancelEdit = () => {
     setEditingId(null);
     setEditingNote({ title: '', description: '' });
+  };
+
+  const handleDeleteStart = (noteId) => {
+    setDeleteConfirm(noteId);
+  };
+
+  const handleDeleteConfirm = () => {
+    const updatedNotes = notes.filter((n) => n.id !== deleteConfirm);
+    setNotes(updatedNotes);
+    localStorage.setItem('instacode_notes', JSON.stringify(updatedNotes));
+    setDeleteConfirm(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteConfirm(null);
   };
 
   return (
@@ -167,6 +183,34 @@ const NotesPage = () => {
           ))
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm !== null && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className={`rounded-lg p-6 max-w-sm w-full ${isDarkMode ? "bg-gray-800" : "bg-white"}`}>
+            <h2 className={`text-lg font-semibold mb-4 ${isDarkMode ? "text-white" : "text-gray-800"}`}>
+              Delete Note?
+            </h2>
+            <p className={`mb-6 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+              Are you sure you want to delete "{notes.find((n) => n.id === deleteConfirm)?.title}"?
+            </p>
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => handleDeleteCancel()}
+                className={`px-4 py-2 rounded transition-colors ${isDarkMode ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-800"}`}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDeleteConfirm()}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Add/Edit Modal */}
       {showModal && (
