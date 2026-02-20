@@ -42,7 +42,7 @@ const RightSidebar = () => {
         <p className={`font-semibold text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Contributions</p>
       </div>
 
-      <div className={`shadow-md p-4 ${isDarkMode ? "bg-gray-800" : "bg-white"}`}>
+      <div className={`${isDarkMode ? "bg-gray-800" : "bg-white"} rounded-lg`}>
         {loading && (
           <div className={`text-center py-4 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
             Loading profile...
@@ -56,28 +56,30 @@ const RightSidebar = () => {
         )}
 
         {profileData && !loading && !error && (
-          <div className="flex items-center mb-4">
-            <img
-              src={profileData.userAvatar}
-              alt={`${profileData.realName}'s avatar`}
-              className="w-12 h-12 rounded-full mr-3"
-            />
-            <div className="flex-grow">
-              <div className={`text-sm font-bold ${isDarkMode ? "text-white" : ""}`}>
-                {profileData.username}
+          <div className={`p-4 rounded-lg ${isDarkMode ? "bg-gray-700" : "bg-gray-50"}`}>
+            <div className="flex items-start gap-3">
+              <img
+                src={profileData.userAvatar}
+                alt={`${profileData.realName}'s avatar`}
+                className="w-16 h-16 rounded-full flex-shrink-0"
+              />
+              <div className="flex-1 min-w-0">
+                <div className={`text-sm font-bold ${isDarkMode ? "text-white" : "text-black"}`}>
+                  {profileData.username}
+                </div>
+                <div className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+                  {profileData.realName}
+                </div>
               </div>
-              <div className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
-                {profileData.realName}
-              </div>
+              <a
+                href="https://leetcode.com/u/pulkit161001/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`text-sm font-semibold flex-shrink-0 ${isDarkMode ? "text-cyan-400" : "text-blue-500"}`}
+              >
+                Follow
+              </a>
             </div>
-            <a
-              href="https://leetcode.com/u/pulkit161001/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`text-sm font-semibold ${isDarkMode ? "text-cyan-400" : "text-blue-500"}`}
-            >
-              Follow
-            </a>
           </div>
         )}
       </div>
