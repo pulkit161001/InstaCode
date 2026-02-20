@@ -56,19 +56,19 @@ const RightSidebar = () => {
         )}
 
         {profileData && !loading && !error && (
-          <div className="flex items-center gap-2 py-3">
+          <div className="flex items-center gap-3 py-2.5">
             <a
               href="https://leetcode.com/u/pulkit161001/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 flex-1 min-w-0"
+              className="flex items-center gap-2.5"
             >
               <img
                 src={profileData.userAvatar}
                 alt={`${profileData.realName}'s avatar`}
                 className="w-10 h-10 rounded-full flex-shrink-0"
               />
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0">
                 <div className={`text-sm font-bold ${isDarkMode ? "text-white" : "text-black"}`}>
                   {profileData.username}
                 </div>
@@ -81,7 +81,7 @@ const RightSidebar = () => {
               href="https://leetcode.com/u/pulkit161001/"
               target="_blank"
               rel="noopener noreferrer"
-              className={`text-sm font-semibold flex-shrink-0 ${isDarkMode ? "text-cyan-400" : "text-blue-500"}`}
+              className={`text-sm font-semibold flex-shrink-0 whitespace-nowrap ${isDarkMode ? "text-cyan-400" : "text-blue-500"}`}
             >
               Follow
             </a>
