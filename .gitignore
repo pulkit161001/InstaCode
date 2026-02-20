@@ -30,3 +30,4 @@ dist-ssr
 frontend/.claude/
 backend/.claude/
 frontend/docs/
+.worktrees/
