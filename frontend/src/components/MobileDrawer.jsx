@@ -4,7 +4,6 @@ import { useRecoilState } from "recoil";
 import PropTypes from "prop-types";
 import { mobileMenuAtom } from "../atoms/mobileMenuAtom";
 import { themeAtom } from "../atoms/themeAtom";
-import { moreMenuItems } from "./Sidebar";
 import { lightModeIcon, darkModeIcon, reportBugIcon } from "../utils/SvgIcons";
 
 function MobileDrawer({ navigationItems }) {
@@ -15,9 +14,8 @@ function MobileDrawer({ navigationItems }) {
   // Filter items that have paths (exclude special items like "Search" and "More")
   const mainNavItems = navigationItems?.filter(item => item.path !== null) || [];
 
-  // Get Search and More items
+  // Get Search item
   const searchItem = navigationItems?.find(item => item.label === "Search");
-  const moreItem = navigationItems?.find(item => item.label === "More");
 
   // Escape key support
   useEffect(() => {
