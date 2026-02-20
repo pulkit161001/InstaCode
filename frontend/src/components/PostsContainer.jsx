@@ -148,7 +148,7 @@ function PostItem({ studyplan }) {
 						• 2d
 					</span>
 				</div>
-				<div>{moreIcon}</div>
+			<div className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>{moreIcon}</div>
 			</div>
 
 			{/* Cover Image using img tag */}
