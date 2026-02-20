@@ -16,6 +16,27 @@ import {
 } from "../utils/SvgIcons";
 import { ClickAwayListener } from "@mui/material";
 
+// Navigation items for sidebar and mobile drawer
+export const navigationItems = [
+  { icon: <Home />, label: "Home", path: "/" },
+  { icon: <Search />, label: "Search", path: null },
+  { icon: <MessageCircle/>, label: "Messages", path: "/messages" },
+  { icon: playgroundIcon, label: "Playground", path: "/playground" },
+  { icon: createIcon, label: "Create", path: "/notes" },
+  { icon: discussionIcon, label: "Discuss", path: "/discuss" },
+  { icon: <AlignJustify />, label: "More", path: null },
+];
+
+// More menu items
+export const moreMenuItems = [
+  {
+    icon: [lightModeIcon, darkModeIcon],
+    label: ["Light Mode", "Dark Mode"],
+    action: "theme",
+  },
+  { icon: reportBugIcon, label: "Report a problem", action: "report" },
+];
+
 const Sidebar = () => {
   const navigate = useNavigate();
   const [showRightSidebar, setShowRightSidebar] = useState(false);
@@ -24,50 +45,20 @@ const Sidebar = () => {
   const [selectedItem, setSelectedItem] = useState("Home");
   const isLightMode = theme === "light";
 
-  const sidebarItems = useMemo(
-    () => [
-      { icon: <Home />, text: "Home" },
-      { icon: <Search />, text: "Search" },
-      // { icon: reelIcon, text: "Reels" },
-      { icon: <MessageCircle/>, text: "Messages" },
-      { icon: playgroundIcon, text: "Playground" },
-      { icon: createIcon, text: "Create" },
-      { icon: discussionIcon, text: "Discuss" },
-      { icon: <AlignJustify />, text: "More" },
-    ],
-    []
-  );
-
-  const moreItems = useMemo(
-    () => [
-      {
-        icon: [lightModeIcon, darkModeIcon],
-        text: ["Light Mode", "Dark Mode"],
-      },
-      { icon: reportBugIcon, text: "Report a problem" },
-    ],
-    []
-  );
-
-  const sidebarHandler = (textType) => {
+  const sidebarHandler = (label) => {
     setShowRightSidebar(false);
-    setShowMoreItems((prev) => (textType === "More" ? !prev : false));
-    setSelectedItem(textType);
+    setShowMoreItems((prev) => (label === "More" ? !prev : false));
+    setSelectedItem(label);
 
-    if (textType === "Home") {
-      navigate("/");
-    } else if (textType === "Playground") {
-      navigate("/playground");
-    } else if (textType === "Messages") {
-      navigate("/messages");
-    } else if (textType === "Create") {
-      navigate("/notes");
-    } else if (textType === "Discuss") {
-      navigate("/discuss");
-    } else if (textType === "Reels") {
-      navigate("/reels");
-    } else if (textType === "Search") {
-      setShowRightSidebar((prev) => !prev);
+    // Find the corresponding navigation item
+    const navItem = navigationItems.find(item => item.label === label);
+
+    if (navItem) {
+      if (label === "Search") {
+        setShowRightSidebar((prev) => !prev);
+      } else if (navItem.path) {
+        navigate(navItem.path);
+      }
     }
   };
 
@@ -88,17 +79,17 @@ const Sidebar = () => {
 
       {/* Main button aligned to Top */}
       <div className="flex-grow">
-        {sidebarItems.slice(0, sidebarItems.length - 1).map((item, index) => (
+        {navigationItems.slice(0, navigationItems.length - 1).map((item, index) => (
           <div
             key={index}
-            onClick={() => sidebarHandler(item.text)}
+            onClick={() => sidebarHandler(item.label)}
             className={`flex items-center gap-3 relative cursor-pointer rounded-lg p-3 my-3 transition-transform duration-200 transform hover:scale-105 ${
               isLightMode ? "hover:bg-gray-100" : "hover:bg-gray-800"
             }`}
           >
             <span
               className={
-                selectedItem === item.text
+                selectedItem === item.label
                   ? isLightMode
                     ? "text-gray-800"
                     : "text-white"
@@ -112,11 +103,11 @@ const Sidebar = () => {
               })}
             </span>
             <span
-              className={`${selectedItem === item.text ? "font-bold" : ""} ${
+              className={`${selectedItem === item.label ? "font-bold" : ""} ${
                 isLightMode ? "" : "text-gray-200"
               }`}
             >
-              {item.text}
+              {item.label}
             </span>
           </div>
         ))}
@@ -131,12 +122,12 @@ const Sidebar = () => {
           }`}
         >
           <span className={`${isLightMode ? "text-gray-400" : "text-gray-500"}`}>
-            {React.cloneElement(sidebarItems[sidebarItems.length - 1].icon, {
+            {React.cloneElement(navigationItems[navigationItems.length - 1].icon, {
               className: "w-5 h-5",
             })}
           </span>
           <span className={isLightMode ? "" : "text-gray-200"}>
-            {sidebarItems[sidebarItems.length - 1].text}
+            {navigationItems[navigationItems.length - 1].label}
           </span>
         </div>
       </div>
@@ -155,13 +146,13 @@ const Sidebar = () => {
             isLightMode ? "bg-gray-100 text-gray-700" : "bg-gray-800 text-gray-200"
           }`}>
             <div className="p-2">
-              {moreItems.map((item, index) => (
+              {moreMenuItems.map((item, index) => (
                 <div
                   key={index}
                   onClick={() => {
-                    if (index === 0) {
+                    if (item.action === "theme") {
                       setTheme(isLightMode ? "dark" : "light");
-                    } else if (index === 1) {
+                    } else if (item.action === "report") {
                       window.open("https://github.com/pulkit161001/InstaCode/issues/new", "_blank");
                     }
                   }}
@@ -171,7 +162,7 @@ const Sidebar = () => {
                 >
                   <span className={isLightMode ? "text-gray-500" : "text-gray-400"}>
                     {React.cloneElement(
-                      index === 0
+                      item.action === "theme"
                         ? isLightMode
                           ? item.icon[0]
                           : item.icon[1]
@@ -180,11 +171,11 @@ const Sidebar = () => {
                     )}
                   </span>
                   <span>
-                    {index === 0
+                    {item.action === "theme"
                       ? isLightMode
-                        ? item.text[0]
-                        : item.text[1]
-                      : item.text}
+                        ? item.label[0]
+                        : item.label[1]
+                      : item.label}
                   </span>
                 </div>
               ))}
