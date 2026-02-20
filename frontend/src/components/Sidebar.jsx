@@ -113,7 +113,7 @@ const Sidebar = () => {
             </span>
             <span
               className={`${selectedItem === item.label ? "font-bold" : ""} ${
-                isLightMode ? "" : "text-gray-200"
+                isLightMode ? "text-gray-800" : "text-gray-200"
               }`}
             >
               {item.label}

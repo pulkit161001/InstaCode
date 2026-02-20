@@ -3,12 +3,21 @@ import { Link } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import PropTypes from "prop-types";
 import { mobileMenuAtom } from "../atoms/mobileMenuAtom";
+import { themeAtom } from "../atoms/themeAtom";
+import { moreMenuItems } from "./Sidebar";
+import { lightModeIcon, darkModeIcon, reportBugIcon } from "../utils/SvgIcons";
 
 function MobileDrawer({ navigationItems }) {
   const [isMenuOpen, setIsMenuOpen] = useRecoilState(mobileMenuAtom);
+  const [theme, setTheme] = useRecoilState(themeAtom);
+  const isLightMode = theme === "light";
 
   // Filter items that have paths (exclude special items like "Search" and "More")
   const mainNavItems = navigationItems?.filter(item => item.path !== null) || [];
+
+  // Get Search and More items
+  const searchItem = navigationItems?.find(item => item.label === "Search");
+  const moreItem = navigationItems?.find(item => item.label === "More");
 
   // Escape key support
   useEffect(() => {
@@ -67,7 +76,7 @@ function MobileDrawer({ navigationItems }) {
         </div>
 
         {/* Nav items */}
-        <nav className="p-4 flex flex-col gap-2">
+        <nav className="p-4 flex flex-col gap-2 flex-grow">
           {mainNavItems.map((item) => (
             <Link
               key={item.label}
@@ -82,6 +91,55 @@ function MobileDrawer({ navigationItems }) {
             </Link>
           ))}
         </nav>
+
+        {/* Divider */}
+        <div className="border-t dark:border-gray-700"></div>
+
+        {/* Bottom menu items (Search, Theme, Report) */}
+        <div className="p-4 flex flex-col gap-2">
+          {/* Search */}
+          {searchItem && (
+            <button
+              onClick={() => {
+                // Search functionality would go here
+                setIsMenuOpen(false);
+              }}
+              className="flex items-center gap-3 p-3 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors w-full text-left"
+            >
+              <span className="w-6 h-6 flex items-center justify-center">
+                {searchItem.icon}
+              </span>
+              <span>{searchItem.label}</span>
+            </button>
+          )}
+
+          {/* Theme toggle */}
+          <button
+            onClick={() => {
+              setTheme(isLightMode ? "dark" : "light");
+            }}
+            className="flex items-center gap-3 p-3 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors w-full text-left"
+          >
+            <span className="w-6 h-6 flex items-center justify-center">
+              {isLightMode ? darkModeIcon : lightModeIcon}
+            </span>
+            <span>{isLightMode ? "Dark Mode" : "Light Mode"}</span>
+          </button>
+
+          {/* Report bug */}
+          <button
+            onClick={() => {
+              window.open("https://github.com/pulkit161001/InstaCode/issues/new", "_blank");
+              setIsMenuOpen(false);
+            }}
+            className="flex items-center gap-3 p-3 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors w-full text-left"
+          >
+            <span className="w-6 h-6 flex items-center justify-center">
+              {reportBugIcon}
+            </span>
+            <span>Report a problem</span>
+          </button>
+        </div>
       </div>
     </>
   );
