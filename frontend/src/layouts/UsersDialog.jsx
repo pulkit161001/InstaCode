@@ -1,6 +1,6 @@
 import { Dialog } from "@mui/material";
 import UsersDialogItem from "./UsersDialogItem";
-import { globeIcon,crossIcon } from "../utils/SvgIcons";
+import { crossIcon } from "../utils/SvgIcons";
 import { useTheme } from "../hooks/useTheme";
 
 const UsersDialog = ({ open, onClose, heading, items = [] }) => {

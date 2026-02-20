@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
 import {
 	Heart,
@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import default_avatar from "../assets/default_avatar.jpg";
 import { useParams } from "react-router-dom";
-import { PulseLoader } from "react-spinners";
 import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
 import { axiosInstance } from "../lib/axios";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Edit, Trash2 } from 'lucide-react'; // Importing icons from lucide-react
 import { useTheme } from '../hooks/useTheme';
 
@@ -95,10 +95,6 @@ const NotesPage = () => {
     <div className="max-w-4xl mx-auto py-8 px-4">
       <div className="mb-6">
         <h1 className={`text-3xl font-semibold ${isDarkMode ? "text-white" : "text-gray-800"}`}>My Notes</h1>
-        <div className={`mt-2 text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
-          <p>Here you can review all your notes.</p>
-          <p>You can have all your notes printed as PDF.</p>
-        </div>
       </div>
 
       <div className="space-y-4">
@@ -192,7 +188,7 @@ const NotesPage = () => {
               Delete Note?
             </h2>
             <p className={`mb-6 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
-              Are you sure you want to delete "{notes.find((n) => n.id === deleteConfirm)?.title}"?
+              Are you sure you want to delete &quot;{notes.find((n) => n.id === deleteConfirm)?.title}&quot;?
             </p>
             <div className="flex gap-2 justify-end">
               <button

@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { axiosInstance } from "../lib/axios";
-import { Dialog } from "@mui/material";
+import { Dialog, Tooltip } from "@mui/material";
 import leetcode_dp from "../assets/LeetCode_dp.png";
 import { moreIcon, playIcon, pauseIcon } from "../utils/SvgIcons";
+import { useTheme } from "../hooks/useTheme";
 
 //TO-DO - in the bottom tag a smalle button should be there with a tag icon (when clicked it will show topic tags)
 //TO-DO - also add gfg POTD (https://practiceapi.geeksforgeeks.org/api/vr/problems-of-day/problem/today/)
 //TO-DO - leetcode profile will have 2/3 posts (potd, contest)
 const PostStory = () => {
+	const { isDarkMode } = useTheme();
 	const [challengeDetails, setChallengeDetails] = useState({});
 	const [open, setOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -33,13 +35,22 @@ const PostStory = () => {
 
 	const handleClose = () => {
 		setOpen(false);
-		clearInterval(timer); // Stop timer when closing the dialog
+		setMoreDialogOpen(false); // Close the more information dialog too
+		if (timer) clearInterval(timer); // Stop timer when closing the dialog
+		setTimer(null); // Clear timer state
 		setProgress(0); // Reset progress
+		setStatusRunning(true); // Reset to running state for next open
 	};
 
 	const startProgress = () => {
 		setProgress(0); // Reset progress to 0
 		if (timer) clearInterval(timer); // Clear any existing timer
+		setTimer(null); // Clear timer state
+		setStatusRunning(true); // Ensure running state
+		resumeProgress();
+	};
+
+	const resumeProgress = () => {
 		const newTimer = setInterval(() => {
 			setProgress((prev) => {
 				if (prev >= 100) {
@@ -55,11 +66,15 @@ const PostStory = () => {
 
 	const toggleTimer = () => {
 		if (statusRunning) {
-			clearInterval(timer);
+			// Pause: stop the interval
+			if (timer) clearInterval(timer);
+			setTimer(null);
+			setStatusRunning(false);
 		} else {
-			startProgress();
+			// Resume: start the interval without resetting progress
+			setStatusRunning(true);
+			resumeProgress();
 		}
-		setStatusRunning(!statusRunning);
 	};
 
 	const formatAcceptanceRatio = (ratio) => {
@@ -78,15 +93,11 @@ const PostStory = () => {
 	};
 
 	const getBgColor = () => {
-		let bg = "bg-gray-100"; // Default background
-		if (challengeDetails?.question?.difficulty === "Hard") {
-			bg = "bg-gray-200";
-		} else if (challengeDetails?.question?.difficulty === "Medium") {
-			bg = "bg-gray-300";
+		if (isDarkMode) {
+			return "bg-gray-950"; // LeetCode dark mode
 		} else {
-			bg = "bg-gray-400";
+			return "bg-gray-50"; // LeetCode light mode
 		}
-		return bg; // Return the computed background class
 	};
 
 	return (
@@ -110,17 +121,17 @@ const PostStory = () => {
 								/>
 							</div>
 							<span className="text-xs font-medium text-white mt-2">
-								LeetCode
+								daily.chall...
 							</span>
 						</div>
 					</div>
 					{/* TO-DO - it should re-direct to new page, x at the top-right to close it and go back home */}
-					<Dialog open={open} onClose={handleClose}>
-						<div className={`h-screen p-4 rounded-md ${getBgColor()}`}>
+					<Dialog open={open} onClose={handleClose} PaperProps={{ style: { backgroundColor: 'transparent', boxShadow: 'none', width: '450px', height: '810px' } }}>
+						<div className={`w-full h-full p-4 rounded-lg flex flex-col ${getBgColor()}`}>
 							{/* Progress Bar */}
-							<div className="h-1 bg-gray-300 rounded-full mb-2">
+							<div className={`h-1 rounded-full mb-2 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
 								<div
-									className="h-full bg-blue-500 rounded-full"
+									className="h-full bg-orange-500 rounded-full"
 									style={{ width: `${progress}%` }}
 								/>
 							</div>
@@ -132,32 +143,38 @@ const PostStory = () => {
 										className="w-8 h-8 rounded-full"
 									/>
 									<div className="ml-2">
-										<span className="text-lg font-bold">LeetCode</span>
-										<span className="text-xs block">{formatTimeElapsed()}</span>
+										<span className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>LeetCode</span>
+										<span className={`text-xs block ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{formatTimeElapsed()}</span>
 									</div>
 								</div>
-								<div alt="More" className="cursor-pointer m-1 flex">
-									<div onClick={toggleTimer}>
+								<div className="cursor-pointer m-1 flex gap-2">
+									<div onClick={toggleTimer} className="text-orange-500 hover:text-orange-600 transition-colors">
 										{statusRunning ? pauseIcon : playIcon}
 									</div>
-									<div onClick={() => setMoreDialogOpen(true)}>{moreIcon}</div>
+									<div onClick={() => setMoreDialogOpen(true)} className="text-orange-500 hover:text-orange-600 transition-colors">{moreIcon}</div>
 								</div>
 							</div>
 
-							{/* Centering the <a> tag */}
-							<div className="flex justify-center items-center flex-col h-fit">
-								<a
-									href={`https://leetcode.com${challengeDetails.link}`}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="text-xl font-semibold rounded-full border border-gray-600 px-4 py-2 bg-gray-100"
-								>
-									{`leetcode.com/problems/${
-										challengeDetails?.question?.title?.length > 5
-											? `${challengeDetails?.question?.title?.slice(0, 5)}...`
-											: challengeDetails?.question?.title || "N/A"
-									}`}
-								</a>
+							{/* Centering the <a> tag - vertically and horizontally */}
+							<div className="flex-1 flex justify-center items-center">
+								<Tooltip title={`https://leetcode.com${challengeDetails.link}`} arrow>
+									<a
+										href={`https://leetcode.com${challengeDetails.link}`}
+										target="_blank"
+										rel="noopener noreferrer"
+										className={`text-xl font-semibold rounded-full border-2 px-6 py-3 transition-all hover:shadow-lg ${
+											isDarkMode
+												? "bg-gray-800 border-orange-500 text-white hover:bg-gray-700"
+												: "bg-white border-orange-500 text-gray-900 hover:bg-orange-50"
+										}`}
+									>
+										{`leetcode.com/problems/${
+											challengeDetails?.question?.title?.length > 5
+												? `${challengeDetails?.question?.title?.slice(0, 5)}...`
+												: challengeDetails?.question?.title || "N/A"
+										}`}
+									</a>
+								</Tooltip>
 							</div>
 						</div>
 					</Dialog>
@@ -166,14 +183,61 @@ const PostStory = () => {
 					<Dialog
 						open={moreDialogOpen}
 						onClose={() => setMoreDialogOpen(false)}
+						PaperProps={{ style: { backgroundColor: 'transparent', boxShadow: 'none' } }}
 					>
-						<div className="p-4">
-							{/* Add your more details here */}
-							<h2 className="text-lg font-bold">More Information</h2>
-							<p>Here you can add more details about the challenge...</p>
+						<div className={`p-6 rounded-lg ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white'}`} style={{ maxWidth: '400px' }}>
+							{/* Problem Title */}
+							{challengeDetails?.question?.title && (
+								<h2 className="text-2xl font-bold mb-6 text-orange-500">{challengeDetails.question.title}</h2>
+							)}
+
+							{/* Difficulty */}
+							{challengeDetails?.question?.difficulty && (
+								<div className="mb-4">
+									<span className="text-sm text-gray-400">Difficulty</span>
+									<div className={`text-lg font-semibold mt-1 ${
+										challengeDetails.question.difficulty === 'Easy' ? 'text-green-500' :
+										challengeDetails.question.difficulty === 'Medium' ? 'text-yellow-500' :
+										'text-red-500'
+									}`}>
+										{challengeDetails.question.difficulty}
+									</div>
+								</div>
+							)}
+
+							{/* Acceptance Rate */}
+							{challengeDetails?.acRate && (
+								<div className="mb-4">
+									<span className="text-sm text-gray-400">Acceptance Rate</span>
+									<div className="text-lg font-semibold mt-1">{formatAcceptanceRatio(challengeDetails.acRate)}</div>
+								</div>
+							)}
+
+							{/* Topic Tags */}
+							{challengeDetails?.question?.topicTags && challengeDetails.question.topicTags.length > 0 && (
+								<div className="mb-4">
+									<span className="text-sm text-gray-400 block mb-2">Topics</span>
+									<div className="flex flex-wrap gap-2">
+										{challengeDetails.question.topicTags.map((tag, idx) => (
+											<span key={idx} className={`px-3 py-1 rounded-full text-sm ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
+												{tag.name || tag}
+											</span>
+										))}
+									</div>
+								</div>
+							)}
+
+							{/* Description Preview */}
+							{challengeDetails?.question?.description && (
+								<div className="mb-4">
+									<span className="text-sm text-gray-400 block mb-2">Description</span>
+									<p className="text-sm line-clamp-4">{challengeDetails.question.description.substring(0, 150)}...</p>
+								</div>
+							)}
+
 							<button
 								onClick={() => setMoreDialogOpen(false)}
-								className="mt-4 p-2 bg-blue-500 text-white rounded"
+								className="w-full mt-6 p-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition"
 							>
 								Close
 							</button>

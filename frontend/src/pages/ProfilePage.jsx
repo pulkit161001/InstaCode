@@ -7,11 +7,8 @@ import {
 	moreIcon,
 	streakIcon,
 	problemListIcon,
-	badgeIcon,
 	linkIcon,
 	tickIcon,
-	pinIcon,
-	redirectIcon,
 	postsIconFill,
 	reputation_icon_1,
 	reputation_icon_2,
@@ -416,11 +413,6 @@ const ProfileDetails = React.memo(
 		hasSuggestedUsers,
 	}) => {
 		const { isDarkMode } = useTheme();
-
-		// Helper function to format large numbers
-		const formatNumber = (number) => {
-			return number.toLocaleString(undefined, { maximumFractionDigits: 2 });
-		};
 
 		return (
 			<div className="flex flex-col gap-6 p-4 sm:w-2/3 sm:p-1">

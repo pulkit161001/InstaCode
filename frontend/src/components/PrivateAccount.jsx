@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { LockIcon } from "../utils/SvgIcons";
-import mycolors from "../constants/colors";
 import UsersDialog from "../layouts/UsersDialog";
 import { badgeIcon, streakIcon, globeIcon } from "../utils/SvgIcons";
+import { useTheme } from "../hooks/useTheme";
 
 const PrivateAccount = () => {
+  const { isDarkMode } = useTheme();
   const [reasonDialog, setReasonDialog] = useState(false);
   const reasonDialogItems = [
     {
@@ -22,19 +23,22 @@ const PrivateAccount = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center h-full py-8 border-t">
+    <div className={`flex flex-col items-center justify-center h-full py-8 border-t ${
+      isDarkMode ? "border-gray-700" : ""
+    }`}>
       <div className="flex items-center text-center">
         <span className="mr-4">{LockIcon}</span>
         <div className="text-left">
-          <p className="text-gray-800 font-semibold">This account is private</p>
-          <p className="text-gray-600">
+          <p className={`font-semibold ${isDarkMode ? "text-gray-300" : "text-gray-800"}`}>This account is private</p>
+          <p className={isDarkMode ? "text-gray-400" : "text-gray-600"}>
             Visit LeetCode to see their data
           </p>
         </div>
       </div>
       <button
-        className="mt-4 px-4 py-2 font-medium bg-gray-100 hover:bg-gray-200 rounded-md"
-        style={{ backgroundColor: mycolors.blue_button }}
+        className={`mt-4 px-4 py-2 font-medium rounded-md text-white ${
+          isDarkMode ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600"
+        }`}
         onClick={() => setReasonDialog(true)}
       >
         See Why

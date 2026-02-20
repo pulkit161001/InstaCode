@@ -1,8 +1,8 @@
 // src/components/NetworkStatusAlert.js
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function NetworkStatusAlert() {
-  const [_, setIsOnline] = useState(navigator.onLine);
+  const [, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
     const handleOnline = () => {

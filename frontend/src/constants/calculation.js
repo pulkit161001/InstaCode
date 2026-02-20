@@ -4,7 +4,6 @@ export const calculateTimeAgo = (creationDate) => {
   const differenceInMs = currentDate - createdDate;
   const differenceInHours = Math.floor(differenceInMs / (1000 * 60 * 60));
   const differenceInMinutes = Math.floor(differenceInMs / (1000 * 60));
-  const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
 
   if (differenceInMinutes < 60) {
     return `${differenceInMinutes}m`; // Return minutes if less than 1 hour

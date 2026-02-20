@@ -144,56 +144,6 @@ const TweetBox = ({ tweet, tab, setSelectedTags, selectedTags }) => {
 	);
 };
 
-const TweetBoxSkimmer = () => {
-	const { isDarkMode } = useTheme();
-	return (
-	<div className={`border p-4 mb-0 ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"}`}>
-		<div className="flex items-start">
-			<div className="skimmer rounded-full" style={{ width: 40, height: 40 }} />
-			<div className="ml-3 flex-grow">
-				<div className="flex justify-between">
-					<div className="flex">
-						<div className="skimmer w-1/3 h-6 rounded-md" />
-						<div className="skimmer w-1/4 h-6 rounded-md ml-2" />
-						<div className="skimmer w-1/6 h-6 rounded-md ml-2" />
-					</div>
-					<div className="skimmer w-8 h-8 rounded-md" />
-				</div>
-				<div className="mt-1">
-					<div className="skimmer w-3/4 h-4 rounded-md" />
-				</div>
-				<div className="flex justify-between mt-2">
-					<div className="skimmer w-1/5 h-5 rounded-md mr-2" />
-					<div className="skimmer w-1/5 h-5 rounded-md mr-2" />
-					<div className="skimmer w-1/5 h-5 rounded-md mr-2" />
-					<div className="skimmer w-1/5 h-5 rounded-md" />
-				</div>
-			</div>
-		</div>
-	</div>
-	);
-};
-
-const TagSkimmer = () => {
-	const { isDarkMode } = useTheme();
-	return (
-		<div className={`cursor-pointer items-center justify-between rounded-full px-4 py-2 m-1 inline-flex ${isDarkMode ? "bg-gray-700 text-gray-700" : "bg-gray-300 text-gray-300"}`}>
-			<div className="skimmer w-20 h-5 rounded-md" />
-			<div className={`h-5 border-l mx-2 ${isDarkMode ? "border-gray-600" : "border-black-400"}`} />
-			<div className="skimmer w-10 h-5 rounded-md" />
-		</div>
-	);
-};
-
-const CategorySkimmer = () => {
-	const { isDarkMode } = useTheme();
-	return (
-		<div className={`cursor-pointer items-center justify-between rounded-full px-4 py-2 m-2 inline-block ${isDarkMode ? "bg-gray-700 text-gray-700" : "bg-gray-300 text-gray-300"}`}>
-			<div className="skimmer w-32 h-5 rounded-md" />
-		</div>
-	);
-};
-
 const Category = ({ selectedCategory, setSelectedCategory, data }) => {
 	const { isDarkMode } = useTheme();
 	const handleCategoryClick = () => {
@@ -505,7 +455,7 @@ const TweetsSection = React.memo(
 				<div className={`shadow-lg ${isDarkMode ? "bg-gray-800" : "bg-white"}`}>
 					{tweets.length == 0 && !loading ? (
 						<div className={`flex justify-center items-center py-16 font-medium text-lg ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
-							There aren't any discuss topics here yet!
+							There aren&apos;t any discuss topics here yet!
 						</div>
 					) : (
 						tweets.map((tweet, index) => (
@@ -658,7 +608,7 @@ const TrendingSection = React.memo(({ isPanelOpen, setIsPanelOpen }) => {
 
 	return (
 		<div className={`rounded-2xl p-4 mb-4 border relative ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-400"}`}>
-			<h3 className={`font-bold mb-2 text-xl ${isDarkMode ? "text-white" : ""}`}>What's Happening</h3>
+			<h3 className={`font-bold mb-2 text-xl ${isDarkMode ? "text-white" : ""}`}>What&apos;s Happening</h3>
 
 			{/* Button to toggle the panel on the top-right */}
 			<button

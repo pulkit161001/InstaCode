@@ -1,9 +1,11 @@
 import { darkModeIcon, lightModeIcon } from "../utils/SvgIcons";
 import SearchBox from "./SearchBox";
+import { useTheme } from "../hooks/useTheme";
 
 const Header = () => {
+	const { isDarkMode } = useTheme();
 	return (
-		<nav className="fixed top-0 w-full border-b bg-white z-10">
+		<nav className={`fixed top-0 w-full border-b z-10 ${isDarkMode ? "bg-gray-900 border-gray-700" : "bg-white border-gray-300"}`}>
 			{/* <!-- navbar container --> */}
 			<div className="flex flex-row justify-between items-center py-1 px-3 sm:px-4 md:px-6 xl:w-4/6 xl:py-2 xl:px-8 mx-auto">
 				{/* <!-- logo --> */}

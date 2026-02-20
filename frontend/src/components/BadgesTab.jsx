@@ -1,15 +1,9 @@
-import React, { useState } from "react";
-import EmptyTab from "./EmptyTab";
+import { useState } from "react";
+import PropTypes from "prop-types";
 import { Dialog } from "@mui/material";
 import {
   metaballsMenu,
-  sendIcon,
   pinIcon,
-  leftIcon,
-  rightIcon,
-  eyeIcon,
-  userIcon,
-  starIcon,
 } from "../utils/SvgIcons";
 import { Heart, MessageCircle, Send } from "lucide-react";
 import positiveComments from "../constants/comments";
@@ -61,7 +55,7 @@ const calculateTimeAgo = (creationDate) => {
 };
 
 // TO-DO - pagination (with loading) and in the HomePage also
-const BadgesTab = React.memo(({ userData }) => {
+const BadgesTab = ({ userData }) => {
   const sortedBadges = userData.matchedUser.badges.sort(sortBadges);
   return (
     <div className="w-full mx-auto ">
@@ -86,7 +80,17 @@ const BadgesTab = React.memo(({ userData }) => {
       </div>
     </div>
   );
-});
+};
+
+BadgesTab.propTypes = {
+  userData: PropTypes.shape({
+    matchedUser: PropTypes.shape({
+      badges: PropTypes.arrayOf(PropTypes.object),
+      profile: PropTypes.object,
+      username: PropTypes.string,
+    }),
+  }).isRequired,
+};
 
 // if country not exist
 // add tags also (java, c++)
@@ -140,7 +144,7 @@ function BadgeItem({
     try {
       await navigator.clipboard.writeText(gifUrl);
       alert("Link Copied");
-    } catch (err) {
+    } catch {
       alert("Failed to copy!");
     }
   };
@@ -431,5 +435,15 @@ const getRandomComments = (username ) => {
   });
 };
 
+BadgeItem.propTypes = {
+  badge: PropTypes.object.isRequired,
+  views: PropTypes.number.isRequired,
+  username: PropTypes.string.isRequired,
+  dp: PropTypes.string.isRequired,
+  country: PropTypes.string,
+  pin: PropTypes.bool.isRequired,
+  skillTags: PropTypes.array,
+  userData: PropTypes.object.isRequired,
+};
 
 export default BadgesTab;

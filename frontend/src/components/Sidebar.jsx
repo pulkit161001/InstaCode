@@ -8,10 +8,8 @@ import {
   darkModeIcon,
   reportBugIcon,
   redirectIcon,
-  reelIcon,
   playgroundIcon,
   createIcon,
-  chatgptIcon,
   discussionIcon,
 } from "../utils/SvgIcons";
 import { ClickAwayListener } from "@mui/material";

@@ -1,6 +1,6 @@
 import { Dialog } from "@mui/material";
 import { axiosInstance } from "../lib/axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import leetcode_dp from "../assets/LeetCode_dp.png";
@@ -86,8 +86,8 @@ const CaughtUpMessage = () => {
 		<div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-full h-12 w-12 flex items-center justify-center text-white text-2xl mb-2">
 			✓
 		</div>
-		<div className="font-semibold">You're all caught up.</div>
-		<div className="text-sm">You've seen all new study plans.</div>
+		<div className="font-semibold">You&apos;re all caught up.</div>
+		<div className="text-sm">You&apos;ve seen all new study plans.</div>
 	</div>
 	);
 };

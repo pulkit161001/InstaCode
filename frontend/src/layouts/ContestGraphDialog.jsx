@@ -1,11 +1,10 @@
-import React from 'react';
 import { Dialog } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip } from 'chart.js';
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip);
 
-const ContestGraphDialog = ({ open, onClose, contestHistory,contestRanking }) => {
+const ContestGraphDialog = ({ open, onClose, contestHistory }) => {
   const attendedContests = contestHistory.filter(contest => contest.attended);
   const labels = attendedContests.map(contest => new Date(contest.contest.startTime * 1000).toLocaleDateString('en-US', {
     year: 'numeric',

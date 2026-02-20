@@ -73,51 +73,77 @@ app.get("/studyplanquestions/:category", async (req, res) => {
 	}
 });
 
-app.post("/compile", (req, res) => {
+app.post("/compile", async (req, res) => {
 	let code = req.body.code;
 	let language = req.body.language;
 	let input = req.body.input;
 
+	// Judge0 CE language IDs (from ce.judge0.com)
 	let languageMap = {
-		cpp: { language: "c++", version: "10.2.0" },
-		java: { language: "java", version: "15.0.2" },
-		python: { language: "python", version: "3.10.0" },
+		cpp: 76,    // C++
+		java: 91,   // Java
+		python: 70, // Python
 	};
 
 	if (!languageMap[language]) {
 		return res.status(400).send({ error: "Unsupported language" });
 	}
 
-	// Prepare data for API request
-	let data = {
-		language: languageMap[language].language,
-		version: languageMap[language].version,
-		files: [
-			{
-				name: "main",
-				content: code,
+	try {
+		// Submit code to free Judge0 CE API (no authentication needed)
+		let submitConfig = {
+			method: "post",
+			url: "https://ce.judge0.com/submissions",
+			headers: {
+				"Content-Type": "application/json",
 			},
-		],
-		stdin: input,
-	};
+			data: {
+				language_id: languageMap[language],
+				source_code: code,
+				stdin: input || "",
+			},
+		};
 
-	let config = {
-		method: "post",
-		url: "https://emkc.org/api/v2/piston/execute",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		data: data,
-	};
+		const submitResponse = await axios(submitConfig);
+		const token = submitResponse.data.token;
 
-	// calling the code compilation API
-	axios(config)
-		.then((response) => {
-			res.json(response.data.run);
-		})
-		.catch((error) => {
-			res.status(500).send({ error: "Something went wrong", error });
-		});
+		// Poll for results
+		let result = null;
+		let attempts = 0;
+		const maxAttempts = 15;
+
+		while (attempts < maxAttempts) {
+			const statusConfig = {
+				method: "get",
+				url: `https://ce.judge0.com/submissions/${token}`,
+				headers: {
+					"Content-Type": "application/json",
+				},
+			};
+
+			const statusResponse = await axios(statusConfig);
+			result = statusResponse.data;
+
+			// Status 1 = In Queue, 2 = Processing
+			if (result.status.id > 2) {
+				break;
+			}
+
+			attempts++;
+			await new Promise((resolve) => setTimeout(resolve, 300)); // Wait 300ms before retry
+		}
+
+		// Format response to match original format
+		const output = {
+			stdout: result.stdout || "",
+			stderr: result.stderr || result.compile_output || "",
+		};
+
+		res.json(output);
+	} catch (error) {
+		console.error("Compilation error:", error.message);
+		res.status(500).send({ error: "Compilation service error", message: error.message });
+	}
 });
 
 app.get("/discuss", async (req, res) => {

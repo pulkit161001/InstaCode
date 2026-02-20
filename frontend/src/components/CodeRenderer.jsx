@@ -1,16 +1,13 @@
-import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import parse from "html-react-parser";
+import PropTypes from "prop-types";
 import {
   a11yLight,
-  colorBrewer,
-  githubGist,
-  monokaiSublime,
-  railscasts,
   stackoverflowDark,
 } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { useTheme } from "../hooks/useTheme";
 
 // Function to decode Unicode emoji like \uD83C\uDD95
 const decodeUnicodeEmoji = (text) => {
@@ -38,9 +35,10 @@ const processLeetcodeLink = (href) => {
 };
 
 const CodeRenderer = ({ inputText }) => {
+  const { isDarkMode } = useTheme();
   // Replace escape characters like \' with just a single quote '
   const formattedText = decodeUnicodeEmoji(inputText)
-    .replace(/\\\'/g, "'") // Handle escaped single quotes
+    .replace(/\\'/g, "'") // Handle escaped single quotes
     .replace(/\\n/g, "  \n"); // Ensure newline handling
 
   const renderers = {
@@ -101,24 +99,32 @@ const CodeRenderer = ({ inputText }) => {
 
     // Render blockquotes for notes
     blockquote: ({ children }) => (
-      <blockquote className="text-gray-600 border-l-4 border-gray-300 pl-4 mt-2 leading-[2rem]">
+      <blockquote className={`border-l-4 pl-4 mt-2 leading-[2rem] ${
+        isDarkMode ? "text-gray-400 border-gray-600" : "text-gray-600 border-gray-300"
+      }`}>
         {children}
       </blockquote>
     ),
 
     // Render tables
     table: ({ children }) => (
-      <table className="w-auto border-collapse table-auto leading-[1.75rem]">
+      <table className={`w-auto border-collapse table-auto leading-[1.75rem] ${
+        isDarkMode ? "border-gray-700" : ""
+      }`}>
         {children}
       </table>
     ),
     th: ({ children }) => (
-      <th className="border border-gray-300 p-2 bg-gray-100 text-left leading-[1.75rem]">
+      <th className={`border p-2 text-left leading-[1.75rem] ${
+        isDarkMode ? "bg-gray-700 border-gray-600 text-white" : "border-gray-300 bg-gray-100"
+      }`}>
         {children}
       </th>
     ),
     td: ({ children }) => (
-      <td className="border border-gray-300 p-2 break-words leading-[1.75rem]">
+      <td className={`border p-2 break-words leading-[1.75rem] ${
+        isDarkMode ? "border-gray-600 text-gray-300" : "border-gray-300"
+      }`}>
         {children}
       </td>
     ),
@@ -126,9 +132,11 @@ const CodeRenderer = ({ inputText }) => {
     // Render inline code
     code: ({ inline, children }) => {
       return inline ? (
-        <code className="bg-gray-100 rounded ">{children}</code>
+        <code className={`rounded ${
+          isDarkMode ? "bg-gray-700 text-gray-200" : "bg-gray-100"
+        }`}>{children}</code>
       ) : (
-        <SyntaxHighlighter language="javascript" style={a11yLight}>
+        <SyntaxHighlighter language="javascript" style={isDarkMode ? stackoverflowDark : a11yLight}>
           {String(children).replace(/\n$/, "")}
         </SyntaxHighlighter>
       );
@@ -147,13 +155,18 @@ const CodeRenderer = ({ inputText }) => {
   return (
     <div className="leading-1">
       <ReactMarkdown
-        children={formattedText}
         remarkPlugins={[remarkGfm]} // Enable GitHub Flavored Markdown
         components={renderers}
         className="my-5"
-      />
+      >
+        {formattedText}
+      </ReactMarkdown>
     </div>
   );
+};
+
+CodeRenderer.propTypes = {
+  inputText: PropTypes.string.isRequired,
 };
 
 export default CodeRenderer;

@@ -1,10 +1,11 @@
 import { Dialog } from "@mui/material";
-
+import PropTypes from "prop-types";
 import { axiosInstance } from "../lib/axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { eyeIcon, problemCountIcon } from "../utils/SvgIcons";
+import { useTheme } from "../hooks/useTheme";
 
-const ListTab = React.memo(({ userData }) => {
+const ListTab = ({ userData }) => {
 	return (
 		<div className="grid grid-cols-2 gap-4 p-4">
 			{userData.createdPublicFavoriteList.favorites.map((item, index) => (
@@ -12,9 +13,18 @@ const ListTab = React.memo(({ userData }) => {
 			))}
 		</div>
 	);
-});
+};
+
+ListTab.propTypes = {
+	userData: PropTypes.shape({
+		createdPublicFavoriteList: PropTypes.shape({
+			favorites: PropTypes.array,
+		}),
+	}).isRequired,
+};
 
 function ListItem({ item }) {
+	const { isDarkMode } = useTheme();
 	const [openList, setOpenList] = useState(false);
 	const [problemlist, setProblemList] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -40,7 +50,9 @@ function ListItem({ item }) {
 	return (
 		<>
 			<div
-				className="flex flex-col justify-between border rounded-lg p-4 shadow-sm bg-gray-100 cursor-pointer"
+				className={`flex flex-col justify-between border rounded-lg p-4 shadow-sm cursor-pointer ${
+					isDarkMode ? "bg-gray-800 border-gray-700" : "bg-gray-100 border-gray-300"
+				}`}
 				style={{ minHeight: "120px" }}
 				title={item.description}
 				onClick={handleOpenDialog} // Fetch data on dialog open
@@ -49,19 +61,19 @@ function ListItem({ item }) {
 				<div className="flex justify-between items-center mb-2">
 					<div className="flex items-center">
 						{problemCountIcon}
-						<span className="font-semibold text-lg ml-2">
+						<span className={`font-semibold text-lg ml-2 ${isDarkMode ? "text-white" : ""}`}>
 							{item.questionNumber}
 						</span>
 					</div>
 					<div className="flex items-center space-x-1">
 						{eyeIcon}
-						<span className="text-sm text-gray-600">{item.viewCount}</span>
+						<span className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>{item.viewCount}</span>
 					</div>
 				</div>
 
 				{/* Bottom Section */}
 				<div className="mt-auto mb-2">
-					<p className="text-gray-700">{item.name}</p>
+					<p className={isDarkMode ? "text-gray-300" : "text-gray-700"}>{item.name}</p>
 				</div>
 			</div>
 
@@ -70,18 +82,22 @@ function ListItem({ item }) {
 				onClose={() => setOpenList(false)}
 				maxWidth="xl"
 				PaperProps={{
-					style: { borderRadius: "10px", overflow: "hidden" },
+					style: {
+						borderRadius: "10px",
+						overflow: "hidden",
+						backgroundColor: isDarkMode ? "#1f2937" : "white",
+					},
 				}}
 			>
 				<div
-					className="flex flex-col items-start p-4 w-80 overflow-y-scroll"
+					className={`flex flex-col items-start p-4 w-80 overflow-y-scroll ${isDarkMode ? "bg-gray-800" : ""}`}
 					style={{
 						maxHeight: "400px",
 						scrollbarWidth: "none", // for Firefox
 					}}
 				>
 					{loading ? (
-						<p>Loading...</p>
+						<p className={isDarkMode ? "text-gray-300" : ""}>Loading...</p>
 					) : problemlist.length > 0 ? (
 						problemlist.map((problem, index) => (
 							<a
@@ -91,8 +107,10 @@ function ListItem({ item }) {
 								rel="noopener noreferrer"
 								className="w-full"
 							>
-								<div className="flex justify-between items-center w-full py-2.5 px-4 border-b last:border-none hover:bg-gray-50">
-									<span className="text-left text-gray-700">
+								<div className={`flex justify-between items-center w-full py-2.5 px-4 border-b last:border-none ${
+									isDarkMode ? "border-gray-700 hover:bg-gray-700" : "hover:bg-gray-50"
+								}`}>
+									<span className={`text-left ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
 										{problem.title}
 									</span>
 									<span
@@ -117,5 +135,15 @@ function ListItem({ item }) {
 		</>
 	);
 }
+
+ListItem.propTypes = {
+	item: PropTypes.shape({
+		slug: PropTypes.string,
+		description: PropTypes.string,
+		questionNumber: PropTypes.number,
+		viewCount: PropTypes.number,
+		name: PropTypes.string,
+	}).isRequired,
+};
 
 export default ListTab;
