@@ -415,10 +415,10 @@ const ProfileDetails = React.memo(
 		const { isDarkMode } = useTheme();
 
 		return (
-			<div className="flex flex-col gap-6 p-4 sm:w-2/3 sm:p-1">
+			<div className={`flex flex-col gap-6 p-4 sm:w-2/3 sm:p-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
 				{/* user_name, rank, rating */}
 				<div className="flex items-center gap-4 sm:justify-start justify-between">
-					<h2 className="text-xl sm:text-2xl font-thin">
+					<h2 className={`text-xl sm:text-2xl font-thin ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
 						{userData.matchedUser.username}
 					</h2>
 					{userData.matchedUser.submitStats.acSubmissionNum[0].count >= 500 ? (
@@ -492,7 +492,7 @@ const ProfileDetails = React.memo(
 
 				{/* bio */}
 				<div className="max-w-full">
-					<p className="font-medium">{userData.matchedUser.profile.realName}</p>
+					<p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{userData.matchedUser.profile.realName}</p>
 					{userData.matchedUser.profile.company &&
 					userData.matchedUser.profile.jobTitle ? (
 						<div className="flex items-center space-x-2">
@@ -504,13 +504,13 @@ const ProfileDetails = React.memo(
 					) : null}
 
 					{userData.matchedUser.profile.school ? (
-						<p className="text-gray-400 whitespace-pre-line">
+						<p className={`whitespace-pre-line ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
 							{userData.matchedUser.profile.school}
 						</p>
 					) : null}
 
 					{userData.matchedUser.profile.aboutMe ? (
-						<p className="whitespace-pre-line">
+						<p className={`whitespace-pre-line ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
 							{userData.matchedUser.profile.aboutMe}
 						</p>
 					) : null}
