@@ -71,7 +71,7 @@ const Sidebar = () => {
     }
   };
 
-  const sidebarClass = `relative px-4 border-r w-[16%] h-screen flex flex-col ${
+  const sidebarClass = `relative px-4 border-r w-64 h-screen flex flex-col ${
     isLightMode ? "border-gray-300 bg-white" : "border-gray-700 bg-gray-900"
   }`;
 

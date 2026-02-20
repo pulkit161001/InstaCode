@@ -48,13 +48,13 @@ const CodeRenderer = ({ inputText }) => {
 
     // Render unordered list
     ul: ({ children }) => (
-      <ul className="list-disc pl-10 leading-[1.75rem]">{children}</ul>
+      <ul className={`list-disc pl-10 leading-[1.75rem] ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>{children}</ul>
     ),
-    li: ({ children }) => <li className="leading-[1.75rem]">{children}</li>,
+    li: ({ children }) => <li className={`leading-[1.75rem] ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>{children}</li>,
 
     // Render ordered list
     ol: ({ children }) => (
-      <ol className="list-decimal pl-10 leading-[1.75rem] list-inside">
+      <ol className={`list-decimal pl-10 leading-[1.75rem] list-inside ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
         {children}
       </ol>
     ),
@@ -153,7 +153,7 @@ const CodeRenderer = ({ inputText }) => {
   };
 
   return (
-    <div className="leading-1">
+    <div className={`leading-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]} // Enable GitHub Flavored Markdown
         components={renderers}

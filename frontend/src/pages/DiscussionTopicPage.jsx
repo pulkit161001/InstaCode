@@ -74,7 +74,7 @@ const CommentCard = ({ comment }) => {
 					<div className="flex flex-col md:flex-row md:justify-between gap-2">
 						<div className="flex flex-wrap gap-1">
 							<h3
-								className={`font-bold ${
+								className={`font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'} ${
 									author ? "cursor-pointer hover:underline" : ""
 								}`}
 								onClick={() =>

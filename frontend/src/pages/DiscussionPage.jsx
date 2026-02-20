@@ -60,7 +60,7 @@ const TweetBox = ({ tweet, tab, setSelectedTags, selectedTags }) => {
 					<div className="flex justify-between">
 						<div className="flex">
 							<h3
-								className={`font-bold ${
+								className={`font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'} ${
 									author ? "cursor-pointer hover:underline" : ""
 								}`}
 								onClick={() =>
@@ -88,7 +88,7 @@ const TweetBox = ({ tweet, tab, setSelectedTags, selectedTags }) => {
 						<MoreHorizontal className={`cursor-pointer ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
 					</div>
 					<p
-						className="mt-1 cursor-pointer"
+						className={`mt-1 cursor-pointer ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}
 						onClick={() =>
 							window.open(`/discuss_topic/${tweet.node.id}`, "_blank")
 						}
@@ -134,7 +134,7 @@ const TweetBox = ({ tweet, tab, setSelectedTags, selectedTags }) => {
 							handleTagClick({ selectedTags, setSelectedTags, tag })
 						}
 						key={index}
-						className="rounded-full m-1 p-1 px-3 border border-gray-400 cursor-pointer"
+						className={`rounded-full m-1 p-1 px-3 border cursor-pointer ${isDarkMode ? 'border-gray-600 text-gray-300' : 'border-gray-400 text-gray-800'}`}
 					>
 						{tag.name}
 					</div>
