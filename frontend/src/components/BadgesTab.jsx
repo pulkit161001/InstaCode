@@ -311,7 +311,7 @@ function BadgeItem({
               <div className="flex flex-col mt-3">
                 {comments.map((comment, idx) => (
                   <div
-                    className="flex items-start space-x-1 my-3 cursor-default"
+                    className={`flex items-start space-x-1 my-3 pb-3 cursor-default ${isDarkMode ? 'border-b border-gray-700' : 'border-b border-gray-300'}`}
                     key={idx}
                   >
                     <div className="w-12">
@@ -328,8 +328,7 @@ function BadgeItem({
                         </div>
                         <span className={`text-sm mr-1 ${isDarkMode ? "text-white" : "text-black"}`}>{comment.comment}</span>
                       </div>
-                      <div></div>
-                      <span className="font-light text-sm text-gray-300 mt">
+                      <span className={`font-light text-sm mt ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                         {comment.random_time}
                         <span className="mx-2" />
                         {comment.random_upvotes} upvotes
