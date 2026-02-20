@@ -11,7 +11,7 @@ const HomePage = () => {
       studyplan's + exploreTab cards
       */}
 			<MetaData title="InstaCode" />
-			<div className="flex h-full md:w-4/5 lg:w-4/6 mx-auto">
+			<div className="flex flex-col md:flex-row h-full w-full md:w-4/5 lg:w-4/6 mx-auto gap-3 md:gap-6 p-3 md:p-6">
 				<PostsContainer />
 				<Outlet />
 				<RightSidebar />
