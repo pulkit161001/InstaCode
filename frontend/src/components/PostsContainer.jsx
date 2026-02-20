@@ -70,10 +70,7 @@ const PostsContainer = () => {
 						<PostStory />
 					</div>
 					{studyplan.map((plan, index) => (
-						<React.Fragment key={index}>
-							<PostItem studyplan={plan} />
-							<hr className={`border-t mt-4 ${isDarkMode ? "border-gray-700" : "border-gray-200"}`} />
-						</React.Fragment>
+						<PostItem studyplan={plan} key={index} />
 					))}
 					<CaughtUpMessage />
 				</div>
