@@ -1,10 +1,14 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import PropTypes from "prop-types";
 import { mobileMenuAtom } from "../atoms/mobileMenuAtom";
 
-function MobileDrawer({ navItems }) {
+function MobileDrawer({ navigationItems }) {
   const [isMenuOpen, setIsMenuOpen] = useRecoilState(mobileMenuAtom);
+
+  // Filter items that have paths (exclude special items like "Search" and "More")
+  const mainNavItems = navigationItems?.filter(item => item.path !== null) || [];
 
   // Escape key support
   useEffect(() => {
@@ -63,14 +67,28 @@ function MobileDrawer({ navItems }) {
         </div>
 
         {/* Nav items */}
-        <nav className="p-4">{navItems}</nav>
+        <nav className="p-4 flex flex-col gap-2">
+          {mainNavItems.map((item) => (
+            <Link
+              key={item.label}
+              to={item.path}
+              onClick={() => setIsMenuOpen(false)}
+              className="flex items-center gap-3 p-3 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <span className="w-6 h-6 flex items-center justify-center">
+                {item.icon}
+              </span>
+              <span>{item.label}</span>
+            </Link>
+          ))}
+        </nav>
       </div>
     </>
   );
 }
 
 MobileDrawer.propTypes = {
-  navItems: PropTypes.node.isRequired,
+  navigationItems: PropTypes.array.isRequired,
 };
 
 export default MobileDrawer;

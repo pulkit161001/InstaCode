@@ -36,7 +36,7 @@ function AppContent() {
 				</div>
 
 				{/* Mobile drawer */}
-				<MobileDrawer navItems={navigationItems} />
+				<MobileDrawer navigationItems={navigationItems} />
 
 				{/* Main content */}
 				<div
