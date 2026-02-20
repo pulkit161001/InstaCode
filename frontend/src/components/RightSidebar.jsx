@@ -1,34 +1,87 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { contributions } from "../constants/contributions";
+import { useTheme } from "../hooks/useTheme";
+import { axiosInstance } from "../lib/axios";
+
+const LEETCODE_USERNAME = "pulkit161001";
 
 const RightSidebar = () => {
+  const { isDarkMode } = useTheme();
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await axiosInstance.get(`/${LEETCODE_USERNAME}`);
+
+        // Extract profile info from response
+        const matchedUser = response.data.matchedUser || {};
+        const userProfile = matchedUser.profile || {};
+        setProfileData({
+          username: matchedUser.username || LEETCODE_USERNAME,
+          userAvatar: userProfile.userAvatar || "",
+          realName: userProfile.realName || "LeetCode User",
+          reputation: userProfile.reputation || 0
+        });
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   return (
     <div>
-      <div className="flex justify-between items-center mt-5">
-        <p className="font-semibold text-gray-500 text-sm">Contributions</p>
-        <span className="text-black text-xs font-semibold cursor-pointer">
-          See All
-        </span>
+      <div className="mt-5">
+        <p className={`font-semibold text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Contributions</p>
       </div>
-      <div className="bg-white shadow-md p-4">
-        {contributions.map((contribution) => (
-          <div key={contribution.username} className="flex items-center mb-4">
+
+      <div className={`shadow-md p-4 ${isDarkMode ? "bg-gray-800" : "bg-white"}`}>
+        {loading && (
+          <div className={`text-center py-4 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+            Loading profile...
+          </div>
+        )}
+
+        {error && (
+          <div className={`text-center py-4 ${isDarkMode ? "text-red-400" : "text-red-600"}`}>
+            Error: {error}
+          </div>
+        )}
+
+        {profileData && !loading && !error && (
+          <div className="flex items-center mb-4">
             <img
-              src={contribution.userAvatar}
-              alt={`${contribution.realName}'s avatar`}
+              src={profileData.userAvatar}
+              alt={`${profileData.realName}'s avatar`}
               className="w-12 h-12 rounded-full mr-3"
             />
             <div className="flex-grow">
-              <div className="text-sm font-bold">{contribution.username}</div>
-              <div className="text-xs text-gray-600">
-                {contribution.realName} - {contribution.reputation} Reputation
+              <div className={`text-sm font-bold ${isDarkMode ? "text-white" : ""}`}>
+                {profileData.username}
+              </div>
+              <div className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+                {profileData.realName} - {profileData.reputation} Reputation
               </div>
             </div>
-            <button className="text-sm text-blue-500 font-semibold">
+            <a
+              href="https://leetcode.com/u/pulkit161001/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`text-sm font-semibold ${isDarkMode ? "text-cyan-400" : "text-blue-500"}`}
+            >
               Follow
-            </button>
+            </a>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
