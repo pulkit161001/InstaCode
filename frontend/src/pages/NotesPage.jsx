@@ -49,6 +49,32 @@ const NotesPage = () => {
     setEditingId(null);
   };
 
+  const handleEditStart = (note) => {
+    setEditingId(note.id);
+    setEditingNote({ title: note.title, description: note.description });
+  };
+
+  const handleSaveEdit = (noteId) => {
+    if (!editingNote.title.trim() || !editingNote.description.trim()) {
+      alert('Please fill in both title and description');
+      return;
+    }
+
+    const updatedNotes = notes.map((n) =>
+      n.id === noteId ? { ...n, ...editingNote } : n
+    );
+
+    setNotes(updatedNotes);
+    localStorage.setItem('instacode_notes', JSON.stringify(updatedNotes));
+    setEditingId(null);
+    setEditingNote({ title: '', description: '' });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditingNote({ title: '', description: '' });
+  };
+
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
       <div className="mb-6">
