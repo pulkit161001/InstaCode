@@ -1,9 +1,21 @@
+import { useEffect } from "react";
 import { useRecoilState } from "recoil";
+import PropTypes from "prop-types";
 import { mobileMenuAtom } from "../atoms/mobileMenuAtom";
-import { useTheme } from "../hooks/useTheme"; // Or access theme from atom
 
 function MobileDrawer({ navItems }) {
   const [isMenuOpen, setIsMenuOpen] = useRecoilState(mobileMenuAtom);
+
+  // Escape key support
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [isMenuOpen, setIsMenuOpen]);
 
   return (
     <>
@@ -12,15 +24,17 @@ function MobileDrawer({ navItems }) {
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
           onClick={() => setIsMenuOpen(false)}
+          aria-hidden="true"
         />
       )}
 
       {/* Drawer */}
       <div
+        role="navigation"
+        onClick={(e) => e.stopPropagation()}
         className={`fixed top-0 left-0 h-screen w-64 z-50 md:hidden transition-transform duration-300 ease-in-out ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         } ${
-          // Theme support
           "bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-r dark:border-gray-700"
         }`}
       >
@@ -28,13 +42,15 @@ function MobileDrawer({ navItems }) {
         <div className="p-4 border-b dark:border-gray-700">
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="p-2 focus:outline-none"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Close menu"
           >
             <svg
               className="w-6 h-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -47,12 +63,14 @@ function MobileDrawer({ navItems }) {
         </div>
 
         {/* Nav items */}
-        <nav className="p-4">
-          {navItems}
-        </nav>
+        <nav className="p-4">{navItems}</nav>
       </div>
     </>
   );
 }
+
+MobileDrawer.propTypes = {
+  navItems: PropTypes.node.isRequired,
+};
 
 export default MobileDrawer;
