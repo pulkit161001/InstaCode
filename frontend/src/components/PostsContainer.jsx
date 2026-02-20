@@ -167,7 +167,7 @@ function PostItem({ studyplan }) {
 					onClick={() =>
 						toast(`It has total ${studyplan.questionNum} problems.`)
 					}
-					className="cursor-pointer"
+					className={`cursor-pointer ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
 				>
 					{codeIcon}
 				</div>
@@ -179,7 +179,7 @@ function PostItem({ studyplan }) {
 								: "This study plan is free to use."
 						)
 					}
-					className="cursor-pointer"
+					className={`cursor-pointer ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
 				>
 					{studyplan.premiumOnly ? premiumIcon : freeIcon}
 				</div>
@@ -187,6 +187,7 @@ function PostItem({ studyplan }) {
 					href={`https://leetcode.com/studyplan/${studyplan.slug}`}
 					target="_blank"
 					rel="noopener noreferrer"
+					className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}
 				>
 					{sendIcon}
 				</a>
