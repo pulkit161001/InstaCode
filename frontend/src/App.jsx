@@ -20,14 +20,16 @@ function AppContent() {
 
 	return (
 		<div className={isDarkMode ? "dark" : ""}>
-			{/* Mobile navigation header */}
-			<div className={`md:hidden flex items-center p-4 border-b ${isDarkMode ? "border-gray-700 bg-gray-900" : "border-gray-200 bg-white"}`}>
+			{/* Mobile navigation header - with proper dark mode styling */}
+			<div className={`md:hidden flex items-center p-4 border-b ${
+				isDarkMode ? "border-gray-700 bg-gray-900 text-white" : "border-gray-200 bg-white text-gray-900"
+			}`}>
 				<MobileNav />
-				<h1 className={`ml-4 text-xl font-bold ${isDarkMode ? "text-white" : ""}`}>InstaCode</h1>
+				<h1 className="ml-4 text-xl font-bold">InstaCode</h1>
 			</div>
 
 			{/* Main layout */}
-			<div className={`flex ${isDarkMode ? "bg-gray-900 text-white" : "bg-white"}`}>
+			<div className={`flex h-screen`}>
 				{/* Desktop sidebar */}
 				<div className="hidden md:block">
 					<Sidebar />
@@ -38,7 +40,7 @@ function AppContent() {
 
 				{/* Main content */}
 				<div
-					className={`flex-1 h-screen overflow-y-auto p-4 ${
+					className={`flex-1 min-h-screen overflow-y-auto p-4 ${
 						isDarkMode ? "bg-gray-900" : "bg-white"
 					}`}
 				>

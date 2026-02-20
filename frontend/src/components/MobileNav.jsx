@@ -7,7 +7,7 @@ function MobileNav() {
   return (
     <button
       onClick={() => setIsMenuOpen(!isMenuOpen)}
-      className="md:hidden p-2 focus:outline-none"
+      className="md:hidden p-2 focus:outline-none dark:text-white"
       aria-label="Toggle menu"
     >
       <svg
