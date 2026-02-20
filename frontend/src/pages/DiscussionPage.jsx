@@ -9,6 +9,7 @@ import {
 	TextField,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
+import Backdrop from "@mui/material/Backdrop";
 import {
 	Heart,
 	LucideAlignEndHorizontal,
@@ -28,8 +29,10 @@ import {
 	formatFullDate,
 } from "../constants/calculation.js";
 import { axiosInstance } from "../lib/axios.js";
+import { useTheme } from "../hooks/useTheme";
 
 const TweetBox = ({ tweet, tab, setSelectedTags, selectedTags }) => {
+	const { isDarkMode } = useTheme();
 	const author = tweet.node.post.author;
 	const authorName = author?.profile?.realName || "Anonymous User";
 	const authorAvatar = author?.profile?.userAvatar || default_avatar;
@@ -38,11 +41,11 @@ const TweetBox = ({ tweet, tab, setSelectedTags, selectedTags }) => {
 	const postLink = `https://leetcode.com/discuss/${tab}/${tweet.node.id}`;
 
 	return (
-		<div className="border border-gray-300 p-4 bg-black mb-0">
+		<div className={`border p-4 mb-0 ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"}`}>
 			{tweet.node.pinned && (
 				<div className="flex items-center">
-					<Pin className="h-4 w-4 ml-6 text-gray-600" />
-					<span className="ml-2 font-bold text-gray-600">Pinned</span>
+					<Pin className={`h-4 w-4 ml-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+					<span className={`ml-2 font-bold ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Pinned</span>
 				</div>
 			)}
 
@@ -68,21 +71,21 @@ const TweetBox = ({ tweet, tab, setSelectedTags, selectedTags }) => {
 							</h3>
 							{author && (
 								<span
-									className="text-gray-500 ml-2 cursor-pointer"
+									className={`ml-2 cursor-pointer ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
 									onClick={() => window.open(`/${author.username}`, "_blank")}
 								>
 									@{authorUsername}
 								</span>
 							)}
 							<span
-								className="text-gray-500 ml-2"
+								className={`ml-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
 								title={formatFullDate(tweet.node.post.creationDate)}
 							>
 								• {calculateTimeAgo(tweet.node.post.creationDate)}
 							</span>
 						</div>
 
-						<MoreHorizontal className="text-gray-500 cursor-pointer" />
+						<MoreHorizontal className={`cursor-pointer ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
 					</div>
 					<p
 						className="mt-1 cursor-pointer"
@@ -93,22 +96,22 @@ const TweetBox = ({ tweet, tab, setSelectedTags, selectedTags }) => {
 						{tweet.node.title}
 					</p>
 					<div className="flex justify-between mt-2">
-						<span className="text-gray-500 flex items-center transition-all duration-300 hover:shadow-lg">
+						<span className={`flex items-center transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
 							<MessageCircle className="cursor-pointer w-5 h-5 mr-1 hover:stroke-blue-500" />
 							{formatCount(tweet.node.commentCount) != 0 &&
 								formatCount(tweet.node.commentCount)}
 						</span>
-						<span className="text-gray-500 flex items-center transition-all duration-300 hover:shadow-lg">
+						<span className={`flex items-center transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
 							<Stars className="cursor-pointer w-5 h-5 mr-1 hover:stroke-blue-500" />
 							{formatCount(authorReputation) != 0 &&
 								formatCount(authorReputation)}
 						</span>
-						<span className="text-gray-500 flex items-center transition-all duration-300 hover:shadow-lg">
+						<span className={`flex items-center transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
 							<Heart className="cursor-pointer w-5 h-5 mr-1 hover:stroke-pink-500" />
 							{formatCount(tweet.node.post.voteCount) != 0 &&
 								formatCount(tweet.node.post.voteCount)}
 						</span>
-						<span className="text-gray-500 flex items-center transition-all duration-300 hover:shadow-lg">
+						<span className={`flex items-center transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
 							<LucideAlignEndHorizontal className="cursor-pointer w-5 h-5 mr-1 hover:stroke-blue-500" />
 							{formatCount(tweet.node.viewCount) != 0 &&
 								formatCount(tweet.node.viewCount)}
@@ -117,7 +120,7 @@ const TweetBox = ({ tweet, tab, setSelectedTags, selectedTags }) => {
 							href={postLink}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="text-gray-500 flex items-center transition-all duration-300 hover:shadow-lg"
+							className={`flex items-center transition-all duration-300 hover:shadow-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
 						>
 							<Share className="cursor-pointer w-5 h-5 mr-1 hover:stroke-blue-500" />
 						</a>
@@ -141,8 +144,10 @@ const TweetBox = ({ tweet, tab, setSelectedTags, selectedTags }) => {
 	);
 };
 
-const TweetBoxSkimmer = () => (
-	<div className="border border-gray-300 p-4 bg-black mb-0">
+const TweetBoxSkimmer = () => {
+	const { isDarkMode } = useTheme();
+	return (
+	<div className={`border p-4 mb-0 ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"}`}>
 		<div className="flex items-start">
 			<div className="skimmer rounded-full" style={{ width: 40, height: 40 }} />
 			<div className="ml-3 flex-grow">
@@ -166,23 +171,31 @@ const TweetBoxSkimmer = () => (
 			</div>
 		</div>
 	</div>
-);
+	);
+};
 
-const TagSkimmer = () => (
-	<div className="cursor-pointer items-center justify-between bg-gray-300 text-gray-300 rounded-full px-4 py-2 m-1 inline-flex">
-		<div className="skimmer w-20 h-5 rounded-md" />
-		<div className="h-5 border-l border-black-400 mx-2" />
-		<div className="skimmer w-10 h-5 rounded-md" />
-	</div>
-);
+const TagSkimmer = () => {
+	const { isDarkMode } = useTheme();
+	return (
+		<div className={`cursor-pointer items-center justify-between rounded-full px-4 py-2 m-1 inline-flex ${isDarkMode ? "bg-gray-700 text-gray-700" : "bg-gray-300 text-gray-300"}`}>
+			<div className="skimmer w-20 h-5 rounded-md" />
+			<div className={`h-5 border-l mx-2 ${isDarkMode ? "border-gray-600" : "border-black-400"}`} />
+			<div className="skimmer w-10 h-5 rounded-md" />
+		</div>
+	);
+};
 
-const CategorySkimmer = () => (
-	<div className="cursor-pointer items-center justify-between bg-gray-300 text-gray-300 rounded-full px-4 py-2 m-2 inline-block">
-		<div className="skimmer w-32 h-5 rounded-md" />
-	</div>
-);
+const CategorySkimmer = () => {
+	const { isDarkMode } = useTheme();
+	return (
+		<div className={`cursor-pointer items-center justify-between rounded-full px-4 py-2 m-2 inline-block ${isDarkMode ? "bg-gray-700 text-gray-700" : "bg-gray-300 text-gray-300"}`}>
+			<div className="skimmer w-32 h-5 rounded-md" />
+		</div>
+	);
+};
 
 const Category = ({ selectedCategory, setSelectedCategory, data }) => {
+	const { isDarkMode } = useTheme();
 	const handleCategoryClick = () => {
 		if (selectedCategory === data.slug) setSelectedCategory();
 		else setSelectedCategory(data.slug);
@@ -191,9 +204,9 @@ const Category = ({ selectedCategory, setSelectedCategory, data }) => {
 	return (
 		<div
 			onClick={handleCategoryClick}
-			className={`cursor-pointer items-center justify-between rounded-full px-4 py-2 m-2 inline-block  text-gray-100
+			className={`cursor-pointer items-center justify-between rounded-full px-4 py-2 m-2 inline-block
       ${
-				selectedCategory === data.slug ? "bg-sky-600" : "border border-sky-600"
+				selectedCategory === data.slug ? "bg-sky-600 text-white" : `border border-sky-600 ${isDarkMode ? "text-gray-200" : "text-gray-700"}`
 			}`}
 		>
 			<span className="text-left font-bold">{data.title}</span>
@@ -210,27 +223,31 @@ const handleTagClick = ({ selectedTags, setSelectedTags, tag }) => {
 };
 
 const Tag = ({ selectedTags, setSelectedTags, tag }) => {
+	const { isDarkMode } = useTheme();
 	return (
 		<div
 			onClick={() => handleTagClick({ selectedTags, setSelectedTags, tag })}
-			className="cursor-pointer items-center justify-between bg-gray-50 rounded-full px-4 py-2 m-1 inline-flex"
+			className={`cursor-pointer items-center justify-between rounded-full px-4 py-2 m-1 inline-flex ${isDarkMode ? "bg-gray-700 text-gray-200" : "bg-gray-50 text-gray-900"}`}
 		>
 			<span className="text-left">{tag.name}</span>
-			<div className="h-5 border-l border-black-400 mx-2" />
+			<div className={`h-5 border-l mx-2 ${isDarkMode ? "border-gray-600" : "border-black-400"}`} />
 			<span>{tag.numTopics}</span>
 		</div>
 	);
 };
 
-const SelectedTag = ({ tag, onRemove }) => (
-	<div
-		onClick={() => onRemove(tag.slug)}
-		className="cursor-pointer items-center justify-between bg-blue-200 rounded-full px-4 py-2 m-1 inline-flex"
-	>
-		<span>{tag.name}</span>
-		<button className="ml-1 text-gray-500 hover:text-gray-700">✕</button>
-	</div>
-);
+const SelectedTag = ({ tag, onRemove }) => {
+	const { isDarkMode } = useTheme();
+	return (
+		<div
+			onClick={() => onRemove(tag.slug)}
+			className={`cursor-pointer items-center justify-between rounded-full px-4 py-2 m-1 inline-flex ${isDarkMode ? "bg-blue-900 text-gray-100" : "bg-blue-200 text-gray-900"}`}
+		>
+			<span>{tag.name}</span>
+			<button className={`ml-1 ${isDarkMode ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"}`}>✕</button>
+		</div>
+	);
+};
 
 const DiscussionPage = () => {
 	const [tweets, setTweets] = useState([]);
@@ -393,8 +410,8 @@ const DiscussionPage = () => {
 					/>
 				</div>
 
-				<div className="flex justify-center p-4">
-					<div className="w-7/12">
+				<div className="flex flex-col md:flex-row justify-center gap-3 md:gap-4 p-3 md:p-4">
+					<div className="w-full md:w-7/12">
 						<SortAndSearchSection
 							sortOption={sortOption}
 							setSortOption={setSortOption}
@@ -411,7 +428,7 @@ const DiscussionPage = () => {
 						/>
 					</div>
 
-					<div className="w-5/12 ml-4">
+					<div className="w-full md:w-5/12">
 						<TrendingSection
 							isPanelOpen={isPanelOpen}
 							setIsPanelOpen={setIsPanelOpen}
@@ -476,40 +493,57 @@ const LoadMoreSection = ({
 
 const TweetsSection = React.memo(
 	({ loading, tweets, selectedTags, setSelectedTags, tabs, tabValue }) => {
+		const { isDarkMode } = useTheme();
 		return (
-			<div className="bg-white shadow-lg">
-				{loading ? (
-					Array.from({ length: 5 }).map((_, index) => (
-						<TweetBoxSkimmer key={index} />
-					))
-				) : tweets.length == 0 ? (
-					<div className="font-medium text-lg">
-						There aren't any discuss topics here yet!
-					</div>
-				) : (
-					tweets.map((tweet, index) => (
-						<TweetBox
-							key={index}
-							tweet={tweet}
-							tab={tabs[tabValue].slug}
-							selectedTags={selectedTags}
-							setSelectedTags={setSelectedTags}
-						/>
-					))
-				)}
-			</div>
+			<>
+				<Backdrop
+					sx={{ color: '#fff', zIndex: 1200, backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)' }}
+					open={loading}
+				>
+					<CircularProgress color="inherit" />
+				</Backdrop>
+				<div className={`shadow-lg ${isDarkMode ? "bg-gray-800" : "bg-white"}`}>
+					{tweets.length == 0 && !loading ? (
+						<div className={`flex justify-center items-center py-16 font-medium text-lg ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+							There aren't any discuss topics here yet!
+						</div>
+					) : (
+						tweets.map((tweet, index) => (
+							<TweetBox
+								key={index}
+								tweet={tweet}
+								tab={tabs[tabValue].slug}
+								selectedTags={selectedTags}
+								setSelectedTags={setSelectedTags}
+							/>
+						))
+					)}
+				</div>
+			</>
 		);
 	}
 );
 
 const TabsSection = React.memo(({ tabValue, tabs, setTabValue }) => {
+	const { isDarkMode } = useTheme();
 	return (
 		<Tabs
 			value={tabValue}
 			onChange={(event, newValue) => setTabValue(newValue)}
-			className="mb-4 border-b border-gray-300"
+			className={`mb-4 border-b ${isDarkMode ? "border-gray-700" : "border-gray-300"}`}
 			variant="scrollable"
 			scrollButtons="auto"
+			sx={{
+				'& .MuiTab-root': {
+					color: isDarkMode ? '#9ca3af' : '#6b7280',
+					'&.Mui-selected': {
+						color: isDarkMode ? '#3b82f6' : '#0284c7',
+					},
+				},
+				'& .MuiTabs-indicator': {
+					backgroundColor: isDarkMode ? '#3b82f6' : '#0284c7',
+				},
+			}}
 		>
 			{tabs.map((value, index) => (
 				<Tab
@@ -524,15 +558,33 @@ const TabsSection = React.memo(({ tabValue, tabs, setTabValue }) => {
 
 const SortAndSearchSection = React.memo(
 	({ sortOption, setSortOption, searchedTopic, setSearchedTopic }) => {
+		const { isDarkMode } = useTheme();
 		return (
-			<div className="flex items-center mb-4">
-				<FormControl variant="outlined" className="mr-2">
-					<InputLabel id="sort-label">Sort</InputLabel>
+			<div className="flex flex-col md:flex-row items-center gap-2 md:gap-3 mb-4">
+				<FormControl variant="outlined" className="w-full md:w-auto">
+					<InputLabel
+						id="sort-label"
+						sx={{ color: isDarkMode ? '#9ca3af' : undefined, '&.Mui-focused': { color: isDarkMode ? '#e5e7eb' : undefined } }}
+					>
+						Sort
+					</InputLabel>
 					<Select
 						labelId="sort-label"
 						value={sortOption}
 						onChange={(e) => setSortOption(e.target.value)}
 						className="rounded-full w-auto"
+						sx={{
+							color: isDarkMode ? '#f3f4f6' : undefined,
+							'& .MuiOutlinedInput-notchedOutline': {
+								borderColor: isDarkMode ? '#4b5563' : undefined,
+							},
+							'&:hover .MuiOutlinedInput-notchedOutline': {
+								borderColor: isDarkMode ? '#6b7280' : undefined,
+							},
+							'&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+								borderColor: isDarkMode ? '#9ca3af' : undefined,
+							},
+						}}
 					>
 						<MenuItem value="hot">Hot</MenuItem>
 						<MenuItem value="newest_to_oldest">Newest to Oldest</MenuItem>
@@ -543,10 +595,28 @@ const SortAndSearchSection = React.memo(
 				<TextField
 					variant="outlined"
 					placeholder="Search topics or comments..."
-					className="rounded-full flex-grow"
+					className="rounded-full flex-grow w-full md:flex-grow"
 					value={searchedTopic}
 					onChange={(e) => setSearchedTopic(e.target.value)}
 					autoComplete="off"
+					sx={{
+						'& .MuiOutlinedInput-root': {
+							color: isDarkMode ? '#f3f4f6' : undefined,
+							'& fieldset': {
+								borderColor: isDarkMode ? '#4b5563' : undefined,
+							},
+							'&:hover fieldset': {
+								borderColor: isDarkMode ? '#6b7280' : undefined,
+							},
+							'&.Mui-focused fieldset': {
+								borderColor: isDarkMode ? '#9ca3af' : undefined,
+							},
+						},
+						'& .MuiOutlinedInput-input::placeholder': {
+							color: isDarkMode ? '#6b7280' : undefined,
+							opacity: 1,
+						},
+					}}
 				/>
 			</div>
 		);
@@ -555,45 +625,51 @@ const SortAndSearchSection = React.memo(
 
 const CategoriesSection = React.memo(
 	({ loading, categories, selectedCategory, setSelectedCategory }) => {
+		const { isDarkMode } = useTheme();
 		return (
-			<div className="bg-black rounded-2xl p-4 mb-4 border border-gray-400">
-				<h3 className="font-bold mb-2 text-xl">Categories</h3>
-				{loading
-					? Array.from({ length: 5 }).map((_, index) => (
-							<CategorySkimmer key={index} />
-					  ))
-					: categories.map((value, index) => (
-							<Category
-								key={index}
-								data={value}
-								selectedCategory={selectedCategory}
-								setSelectedCategory={setSelectedCategory}
-							/>
-					  ))}
-			</div>
+			<>
+				<Backdrop
+					sx={{ color: '#fff', zIndex: 1200, backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)' }}
+					open={loading}
+				>
+					<CircularProgress color="inherit" />
+				</Backdrop>
+				<div className={`rounded-2xl p-4 mb-4 border ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-400"}`}>
+					<h3 className={`font-bold mb-2 text-xl ${isDarkMode ? "text-white" : ""}`}>Categories</h3>
+					{categories.map((value, index) => (
+						<Category
+							key={index}
+							data={value}
+							selectedCategory={selectedCategory}
+							setSelectedCategory={setSelectedCategory}
+						/>
+					))}
+				</div>
+			</>
 		);
 	}
 );
 
 const TrendingSection = React.memo(({ isPanelOpen, setIsPanelOpen }) => {
+	const { isDarkMode } = useTheme();
 	const togglePanel = () => {
 		setIsPanelOpen((prevState) => !prevState);
 	};
 
 	return (
-		<div className="bg-black rounded-2xl p-4 mb-4 border border-gray-400 relative">
-			<h3 className="font-bold mb-2 text-xl">What's Happening</h3>
+		<div className={`rounded-2xl p-4 mb-4 border relative ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-400"}`}>
+			<h3 className={`font-bold mb-2 text-xl ${isDarkMode ? "text-white" : ""}`}>What's Happening</h3>
 
 			{/* Button to toggle the panel on the top-right */}
 			<button
 				onClick={togglePanel}
-				className="absolute top-4 right-4 text-white"
+				className={`absolute top-4 right-4 ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
 			>
 				{isPanelOpen ? <PanelTopOpen /> : <PanelTopClose />}
 			</button>
 
 			{!isPanelOpen && (
-				<span className="ml-2 text-sm text-gray-500">
+				<span className={`ml-2 text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
 					Show data from LeetCode homescreen, someposted job experience
 				</span>
 			)}
@@ -610,6 +686,7 @@ const TagsSection = React.memo(
 		searchedTag,
 		setSearchedTag,
 	}) => {
+		const { isDarkMode } = useTheme();
 		const removeTag = (id) => {
 			setSelectedTags((prevTags) =>
 				prevTags.filter((prevtag) => prevtag.slug !== id)
@@ -620,12 +697,19 @@ const TagsSection = React.memo(
 		const unSelectedTags = tags.filter((tag) => !selectedSlugs.has(tag.slug));
 
 		return (
-			<div className="bg-black rounded-2xl p-4 border border-gray-400">
+			<>
+				<Backdrop
+					sx={{ color: '#fff', zIndex: 1200, backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)' }}
+					open={loading}
+				>
+					<CircularProgress color="inherit" />
+				</Backdrop>
+				<div className={`rounded-2xl p-4 border ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-400"}`}>
 				{!loading &&
 					selectedTags.map((item, index) => (
 						<SelectedTag key={index} tag={item} onRemove={removeTag} />
 					))}
-				<h3 className="font-bold mb-2 text-xl">Tags</h3>
+				<h3 className={`font-bold mb-2 text-xl ${isDarkMode ? "text-white" : ""}`}>Tags</h3>
 				<TextField
 					variant="outlined"
 					placeholder="Search tags..."
@@ -634,12 +718,30 @@ const TagsSection = React.memo(
 					fullWidth
 					className="mb-2"
 					autoComplete="off"
+					sx={{
+						'& .MuiOutlinedInput-root': {
+							color: isDarkMode ? '#f3f4f6' : undefined,
+							'& fieldset': {
+								borderColor: isDarkMode ? '#4b5563' : undefined,
+							},
+							'&:hover fieldset': {
+								borderColor: isDarkMode ? '#6b7280' : undefined,
+							},
+							'&.Mui-focused fieldset': {
+								borderColor: isDarkMode ? '#9ca3af' : undefined,
+							},
+						},
+						'& .MuiOutlinedInput-input::placeholder': {
+							color: isDarkMode ? '#6b7280' : undefined,
+							opacity: 1,
+						},
+					}}
 				/>
 				<div className="mt-2">
 					{loading
-						? Array.from({ length: 5 }).map((_, index) => (
-								<TagSkimmer key={index} />
-						  ))
+						? <div className="flex justify-center items-center py-12">
+							<CircularProgress />
+						</div>
 						: unSelectedTags.map((item, index) => (
 								<Tag
 									key={index}
@@ -650,6 +752,7 @@ const TagsSection = React.memo(
 						  ))}
 				</div>
 			</div>
+			</>
 		);
 	}
 );
