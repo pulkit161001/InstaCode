@@ -17,6 +17,12 @@
     background-size: 200% 100%;
     animation: skimmer 1.5s infinite linear;
   }
+
+  @media (prefers-color-scheme: dark) {
+    .skimmer {
+      background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+    }
+  }
   
   table {
     width: 100%;
@@ -43,4 +49,55 @@ table th, table td {
 
 .overflow-y-auto::-webkit-scrollbar {
   display: none; /* Chrome, Safari, and Edge */
+}
+
+/* MUI Dark Mode Styles */
+.dark .MuiOutlinedInput-root {
+  color: #f3f4f6;
+}
+
+.dark .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: #4b5563;
+}
+
+.dark .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #6b7280;
+}
+
+.dark .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #9ca3af;
+}
+
+.dark .MuiOutlinedInput-input::placeholder {
+  color: #6b7280;
+  opacity: 1;
+}
+
+.dark .MuiInputLabel-root {
+  color: #9ca3af;
+}
+
+.dark .MuiInputLabel-root.Mui-focused {
+  color: #e5e7eb;
+}
+
+.dark .MuiMenu-paper {
+  background-color: #1f2937;
+  color: #f3f4f6;
+}
+
+.dark .MuiMenuItem-root {
+  color: #f3f4f6;
+}
+
+.dark .MuiMenuItem-root:hover {
+  background-color: #374151;
+}
+
+.dark .MuiTab-root {
+  color: #9ca3af;
+}
+
+.dark .MuiTab-root.Mui-selected {
+  color: #3b82f6;
 }

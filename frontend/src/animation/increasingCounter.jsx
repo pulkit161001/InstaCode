@@ -1,4 +1,5 @@
-import React,{ useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
 export const AnimatedNumber = ({ target, duration = 2000 }) => {
   const [currentNumber, setCurrentNumber] = useState(0);
@@ -22,4 +23,9 @@ export const AnimatedNumber = ({ target, duration = 2000 }) => {
   }, [target, duration]);
 
   return <span className="font-bold">{currentNumber}</span>;
+};
+
+AnimatedNumber.propTypes = {
+  target: PropTypes.number.isRequired,
+  duration: PropTypes.number,
 };

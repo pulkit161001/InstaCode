@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog } from "@mui/material";
 import {
 	infoIcon,
@@ -17,9 +17,11 @@ import { axiosInstance } from "../lib/axios";
 import AboutDialogItem from "./AboutDialogItem";
 import { formatFullDate } from "../constants/calculation.js";
 import { FadeLoader } from "react-spinners";
+import { useTheme } from "../hooks/useTheme";
 
 // TO-DO - add top 3%
 const AboutThisAccount = ({ open, userData, onClose }) => {
+	const { isDarkMode } = useTheme();
 	const [aboutContent, setAboutContent] = useState([]);
 	const [loading, setLoading] = useState(true);
 
@@ -99,9 +101,14 @@ const AboutThisAccount = ({ open, userData, onClose }) => {
 							text: getDiscussionCount(userData),
 							title: "Discussion Count",
 						},
+						{
+							logo: <TrendingUp />,
+							text: getRankingData(userData),
+							title: "Profile Ranking",
+						},
 					];
 					setAboutContent(content);
-				} catch (err) {
+				} catch {
 					setAboutContent([]);
 				} finally {
 					setLoading(false);
@@ -124,25 +131,25 @@ const AboutThisAccount = ({ open, userData, onClose }) => {
 			}}
 		>
 			{loading ? (
-				<div className="flex items-center justify-center h-full p-5 bg-gray-50 w-full">
+				<div className={`flex items-center justify-center h-full p-5 w-full ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
 					<FadeLoader />
 				</div>
 			) : (
 				<>
-					<div className="font-medium border-b py-2.5 w-full bg-gray-50 cursor-text text-center">
+					<div className={`font-medium border-b py-2.5 w-full cursor-text text-center ${isDarkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-gray-50 border-gray-300'}`}>
 						About this account
 					</div>
-					<div className="flex flex-col items-center w-full p-4 bg-black">
+					<div className={`flex flex-col items-center w-full p-4 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
 						<img
 							draggable="false"
 							className="object-contain rounded-full w-24 h-24 mb-4"
 							src={userData.matchedUser.profile.userAvatar}
 							alt={`${userData.matchedUser.username}'s avatar`}
 						/>
-						<h2 className="text-lg font-bold">
+						<h2 className={`text-lg font-bold ${isDarkMode ? "text-white" : ""}`}>
 							{userData.matchedUser.username}
 						</h2>
-						<p className="text-gray-500 mb-2 text-sm font-normal text-center">
+						<p className={`mb-2 text-sm font-normal text-center ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
 							To help keep our community authentic, we’re showing information
 							about accounts on InstaCode.
 						</p>
@@ -170,7 +177,7 @@ const AboutThisAccount = ({ open, userData, onClose }) => {
 			)}
 			<div
 				onClick={onClose}
-				className="font-medium border-t py-2.5 w-full bg-gray-50 cursor-pointer text-center"
+				className={`font-medium border-t py-2.5 w-full cursor-pointer text-center ${isDarkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-gray-50 border-gray-300'}`}
 			>
 				Close
 			</div>
@@ -293,6 +300,11 @@ function getMostUsedLanguage(userData) {
 
 function getSolutionCount(userData) {
 	return userData?.matchedUser?.profile?.solutionCount;
+}
+
+function getRankingData(userData) {
+	const ranking = userData?.matchedUser?.profile?.ranking;
+	return ranking ? `#${ranking.toLocaleString()}` : "N/A";
 }
 
 export default AboutThisAccount;

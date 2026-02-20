@@ -1,14 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Editor from "@monaco-editor/react";
+import { useRecoilValue } from 'recoil';
+import { themeAtom } from '../atoms/themeAtom';
 import { axiosInstance } from '../lib/axios';
 import { CirclePlayIcon, ArrowUpSquareIcon, ArrowDownSquareIcon } from "lucide-react";
 import {defaultCodeSnippets} from "../constants/codetemplate.js"
 
 // This API might not understand how to directly execute JavaScript code. JavaScript is typically interpreted in web browsers, not compiled like languages like C++ or Java.
 const PlaygroundPage = () => {
+	const theme = useRecoilValue(themeAtom);
+	const isDarkMode = theme === "dark";
     const [userCode, setUserCode] = useState(``);
     const [userLang, setUserLang] = useState("java");
-    const [fontSize, _] = useState(15);
+    const [fontSize, ] = useState(15);
     const [userInput, setUserInput] = useState("");
     const [userOutput, setUserOutput] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -60,10 +64,10 @@ const PlaygroundPage = () => {
     };
 
     return (
-        <div className="flex h-screen overflow-hidden">
+        <div className={`flex h-screen overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
             {/* Code Editor Section */}
-            <div className="w-3/5 flex flex-col border-r">
-                <div className="flex justify-between items-center p-4 bg-gray-300">
+            <div className={`w-3/5 flex flex-col border-r ${isDarkMode ? 'border-gray-700' : 'border-gray-300'}`}>
+                <div className={`flex justify-between items-center p-4 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
                     <button
                         onClick={compile}
                         disabled={loading}  // Disable button when loading
@@ -75,7 +79,7 @@ const PlaygroundPage = () => {
                     <select
                         value={userLang}
                         onChange={(e) => setUserLang(e.target.value)}
-                        className="bg-gray-100 text-black border px-2 py-1 rounded-md"
+                        className={`border px-2 py-1 rounded-md ${isDarkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-black border-gray-300'}`}
                     >
                         <option value="python">Python</option>
                         <option value="java">Java</option>
@@ -94,8 +98,8 @@ const PlaygroundPage = () => {
 
             {/* Output Section */}
             <div className="w-2/5 flex flex-col">
-                <div className="flex justify-between items-center p-4 bg-gray-300">
-                    <h2 className="text-black">
+                <div className={`flex justify-between items-center p-4 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
+                    <h2 className={isDarkMode ? 'text-white' : 'text-black'}>
                         Output:
                         {status && (
                             <span
@@ -114,25 +118,25 @@ const PlaygroundPage = () => {
                     {userOutput.length > 0 && (
                         <button
                             onClick={clearOutput}
-                            className="text-black bg-gray-400 px-2 py-1 rounded-md hover:bg-gray-500"
+                            className={`px-2 py-1 rounded-md ${isDarkMode ? 'text-white bg-gray-700 hover:bg-gray-600' : 'text-black bg-gray-300 hover:bg-gray-400'}`}
                         >
                             Clear Console
                         </button>
                     )}
                 </div>
-                <div ref={outputRef} className="flex-1 p-4 bg-gray-100 overflow-auto">
+                <div ref={outputRef} className={`flex-1 p-4 overflow-auto ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
                     {userOutput.map((output, index) => (
-                        <pre key={index} className="text-black whitespace-pre-wrap">
+                        <pre key={index} className={`whitespace-pre-wrap ${isDarkMode ? 'text-white' : 'text-black'}`}>
                             {output}
                         </pre>
                     ))}
-                    {loading ? <span className='text-blue-300'><br/>Running code...</span> : <></>}
+                    {loading ? <span className={isDarkMode ? 'text-blue-400' : 'text-blue-500'}><br/>Running code...</span> : <></>}
                 </div>
                 {/* Input Box Collapsible */}
-                <div className="p-4 bg-gray-300">
+                <div className={`p-4 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
                     <button
                         onClick={() => setShowInputBox(!showInputBox)}
-                        className="text-black bg-gray-400 px-4 py-1 rounded-md hover:bg-gray-500 flex items-center gap-2"
+                        className={`px-4 py-1 rounded-md flex items-center gap-2 ${isDarkMode ? 'text-white bg-gray-700 hover:bg-gray-600' : 'text-black bg-gray-300 hover:bg-gray-400'}`}
                     >
                         stdin {showInputBox ? <ArrowDownSquareIcon /> : <ArrowUpSquareIcon />}
                     </button>
@@ -141,7 +145,7 @@ const PlaygroundPage = () => {
                             value={userInput}
                             onChange={(e) => setUserInput(e.target.value)}
                             placeholder="Enter your input here..."
-                            className="w-full mt-2 p-2 border rounded-md bg-white text-black"
+                            className={`w-full mt-2 p-2 border rounded-md ${isDarkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-black border-gray-300'}`}
                             rows={4}
                         ></textarea>
                     )}

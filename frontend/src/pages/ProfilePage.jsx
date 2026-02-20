@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../lib/axios";
+import { useTheme } from "../hooks/useTheme";
 import BackdropLoader from "../layouts/BackdropLoader";
 import {
 	moreIcon,
 	streakIcon,
 	problemListIcon,
-	badgeIcon,
 	linkIcon,
 	tickIcon,
-	pinIcon,
-	redirectIcon,
 	postsIconFill,
 	reputation_icon_1,
 	reputation_icon_2,
@@ -39,6 +37,7 @@ import { AnimatedNumber } from "../animation/increasingCounter";
 const ProfilePage = () => {
 	const [userData, setUserData] = useState(null);
 	const { username } = useParams();
+	const { isDarkMode } = useTheme();
 	const [moreSection, setMoreSection] = useState(false);
 	const [moreUser, setMoreUser] = useState(false);
 	const [showAboutProfile, setShowAboutProfile] = useState(false);
@@ -52,6 +51,7 @@ const ProfilePage = () => {
 		submissionDates: new Map(),
 	});
 	const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+	const [hasSuggestedUsers, setHasSuggestedUsers] = useState(false);
 
 	const handleAboutProfileClick = () => {
 		setMoreSection(false); // Close the initial dialog
@@ -126,6 +126,12 @@ const ProfilePage = () => {
 		handleSearchButton();
 	}, [username]);
 
+	useEffect(() => {
+		const storedUsers = JSON.parse(localStorage.getItem("recentSearches")) || [];
+		const usersOtherThanCurrent = storedUsers.filter((user) => user.username !== username);
+		setHasSuggestedUsers(usersOtherThanCurrent.length > 0);
+	}, [username]);
+
 	return (
 		<>
 			{loading ? (
@@ -143,6 +149,7 @@ const ProfilePage = () => {
 							userData={userData}
 							contestDialog={contestDialog}
 							setContestDialog={setContestDialog}
+							hasSuggestedUsers={hasSuggestedUsers}
 						/>
 					</div>
 
@@ -163,6 +170,7 @@ const ProfilePage = () => {
 									borderRadius: "12px",
 									width: "400px",
 									maxWidth: "90%",
+									backgroundColor: isDarkMode ? "#1f2937" : "white",
 								},
 							}}
 						>
@@ -170,19 +178,19 @@ const ProfilePage = () => {
 								href={`https://leetcode.com/${userData.matchedUser.username}`}
 								target="_blank"
 								rel="noopener noreferrer" // Adds security protection for new tab links
-								className="border-t py-2.5 w-full bg-gray-50 cursor-pointer text-center block"
+								className={`border-t py-2.5 w-full cursor-pointer text-center block ${isDarkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-gray-50 border-gray-300 text-black'}`}
 							>
 								Visit Profile
 							</a>
 							<button
 								onClick={handleAboutProfileClick}
-								className="border-t py-2.5 w-full bg-gray-50 cursor-pointer text-center"
+								className={`border-t py-2.5 w-full cursor-pointer text-center ${isDarkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-gray-50 border-gray-300 text-black'}`}
 							>
 								About this account
 							</button>
 							<button
 								onClick={() => setMoreSection(false)}
-								className="border-t py-2.5 w-full bg-gray-50 cursor-pointer text-center"
+								className={`border-t py-2.5 w-full cursor-pointer text-center ${isDarkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-gray-50 border-gray-300 text-black'}`}
 							>
 								Cancel
 							</button>
@@ -208,7 +216,7 @@ const ProfilePage = () => {
 								<SocialMediaStory userData={userData} />
 							</div>
 							<div className="border-t">
-								<Tabs setSection={setSection} section={section} />
+								<Tabs setSection={setSection} section={section} isDarkMode={isDarkMode} />
 							</div>
 
 							<div className="mt-4 w-full">{renderActiveTabContent}</div>
@@ -229,6 +237,7 @@ const ProfilePage = () => {
 
 function SuggestedUsers({ navigate, username, changeMoreUser }) {
 	const [users, setUsers] = useState([]);
+	const { isDarkMode } = useTheme();
 
 	const handleDelete = (term) => {
 		const updatedUsers = users.filter(
@@ -244,7 +253,7 @@ function SuggestedUsers({ navigate, username, changeMoreUser }) {
 	}, []);
 
 	return (
-		<div className="p-6 text-white">
+		<div className={`p-6 ${isDarkMode ? 'text-white' : 'text-black'}`}>
 			<div className="flex justify-between items-center mb-4">
 				<h2 className="text-lg font-semibold">Suggested for you</h2>
 				<a onClick={changeMoreUser} className="text-blue-500 text-sm">
@@ -264,7 +273,7 @@ function SuggestedUsers({ navigate, username, changeMoreUser }) {
 						>
 							{/* Close Icon */}
 							<button
-								className="absolute top-2 right-2 text-gray-400 hover:text-gray-300 text-xl"
+								className={`absolute top-2 right-2 text-xl ${isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-500'}`}
 								onClick={(e) => {
 									e.stopPropagation(); // Prevents navigate on delete
 									handleDelete(user);
@@ -282,7 +291,7 @@ function SuggestedUsers({ navigate, username, changeMoreUser }) {
 
 							{/* User Info */}
 							<h3 className="text-sm font-semibold mt-2">{user.username}</h3>
-							<p className="text-xs text-gray-400 mb-4">{user.realName}</p>
+							<p className={`text-xs mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{user.realName}</p>
 
 							{/* Follow Button */}
 							<button className="text-blue-500 font-medium border-t pt-2 w-full">
@@ -354,7 +363,7 @@ const ProfilePicture = React.memo(({ userData }) => {
 					{/* Reputation Box */}
 					{reputation >= 10 && (
 						<div
-							className="cursor-pointer absolute flex items-center top-2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-300 hover:bg-gray-200 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md"
+							className="cursor-pointer absolute flex items-center top-2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-slate-500 hover:bg-slate-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md"
 							title="Reputation"
 							onClick={() =>
 								toast(`This account has ${reputation} reputation.`)
@@ -401,17 +410,15 @@ const ProfileDetails = React.memo(
 		contestDialog,
 		setContestDialog,
 		changeMoreUser,
+		hasSuggestedUsers,
 	}) => {
-		// Helper function to format large numbers
-		const formatNumber = (number) => {
-			return number.toLocaleString(undefined, { maximumFractionDigits: 2 });
-		};
+		const { isDarkMode } = useTheme();
 
 		return (
-			<div className="flex flex-col gap-6 p-4 sm:w-2/3 sm:p-1">
+			<div className={`flex flex-col gap-6 p-4 sm:w-2/3 sm:p-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
 				{/* user_name, rank, rating */}
 				<div className="flex items-center gap-4 sm:justify-start justify-between">
-					<h2 className="text-xl sm:text-2xl font-thin">
+					<h2 className={`text-xl sm:text-2xl font-thin ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
 						{userData.matchedUser.username}
 					</h2>
 					{userData.matchedUser.submitStats.acSubmissionNum[0].count >= 500 ? (
@@ -443,26 +450,14 @@ const ProfileDetails = React.memo(
 							contestRanking={userData.userContestRanking || null}
 						/>
 
-						{userData.matchedUser.profile.ranking ? (
-							<button
-								className="bg-gray-300 text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-900"
-								title={`Rank ${parseInt(userData.matchedUser.profile.ranking)}`}
-								onClick={() => {
-									toast(
-										`Rank ${formatNumber(userData.matchedUser.profile.ranking)}`
-									);
-								}}
+						{hasSuggestedUsers && (
+							<div
+								onClick={changeMoreUser}
+								className="sm:block hidden cursor-pointer bg-blue-700 bg-opacity-50 rounded-lg px-1.5 py-1.5 hover:bg-opacity-70"
 							>
-								Rank
-							</button>
-						) : null}
-
-						<div
-							onClick={changeMoreUser}
-							className="sm:block hidden cursor-pointer bg-gray-300 rounded-lg px-1.5 py-1.5"
-						>
-							<UserPlus className="w-6 h-6" />
-						</div>
+								<UserPlus className="w-6 h-6" />
+							</div>
+						)}
 
 						<span
 							onClick={changeMoreSection}
@@ -475,19 +470,19 @@ const ProfileDetails = React.memo(
 
 				{/* problems solved */}
 				<div className="flex justify-between items-center max-w-[21.5rem]">
-					<div style={{ color: "#50E5E5" }}>
+					<div className={isDarkMode ? 'text-cyan-400' : 'text-cyan-500'}>
 						<AnimatedNumber
 							target={userData.matchedUser.submitStats.acSubmissionNum[1].count}
 						/>{" "}
 						easy
 					</div>
-					<div style={{ color: "#FFBE1A" }}>
+					<div className={isDarkMode ? 'text-yellow-400' : 'text-yellow-500'}>
 						<AnimatedNumber
 							target={userData.matchedUser.submitStats.acSubmissionNum[2].count}
 						/>{" "}
 						medium
 					</div>
-					<div style={{ color: "#F74242" }}>
+					<div className={isDarkMode ? 'text-red-400' : 'text-red-500'}>
 						<AnimatedNumber
 							target={userData.matchedUser.submitStats.acSubmissionNum[3].count}
 						/>{" "}
@@ -497,11 +492,11 @@ const ProfileDetails = React.memo(
 
 				{/* bio */}
 				<div className="max-w-full">
-					<p className="font-medium">{userData.matchedUser.profile.realName}</p>
+					<p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{userData.matchedUser.profile.realName}</p>
 					{userData.matchedUser.profile.company &&
 					userData.matchedUser.profile.jobTitle ? (
 						<div className="flex items-center space-x-2">
-							<div className="bg-gray-100 text-white px-3 py-1 rounded-full text-sm">
+							<div className={`px-3 py-1 rounded-full text-sm ${isDarkMode ? 'bg-slate-700 text-white' : 'bg-gray-200 text-gray-900'}`}>
 								{userData.matchedUser.profile.company} |{" "}
 								{userData.matchedUser.profile.jobTitle}
 							</div>
@@ -509,26 +504,26 @@ const ProfileDetails = React.memo(
 					) : null}
 
 					{userData.matchedUser.profile.school ? (
-						<p className="text-gray-400 whitespace-pre-line">
+						<p className={`whitespace-pre-line ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
 							{userData.matchedUser.profile.school}
 						</p>
 					) : null}
 
 					{userData.matchedUser.profile.aboutMe ? (
-						<p className="whitespace-pre-line">
+						<p className={`whitespace-pre-line ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
 							{userData.matchedUser.profile.aboutMe}
 						</p>
 					) : null}
 
 					{userData.matchedUser.profile.websites?.length > 0 ? (
 						<div className="flex items-center">
-							<span className="sm:block text-blue-900 flex items-center">
+							<span className="sm:block text-blue-400 flex items-center">
 								{linkIcon}
 							</span>
 							<a
 								href={userData.matchedUser.profile.websites[0]}
 								target="_blank"
-								className="text-blue-900 font-medium hover:underline"
+								className="text-blue-400 font-medium hover:underline"
 							>
 								{new URL(userData.matchedUser.profile.websites[0]).hostname}
 							</a>
@@ -540,15 +535,17 @@ const ProfileDetails = React.memo(
 	}
 );
 
-function Tabs({ section, setSection }) {
+function Tabs({ section, setSection, isDarkMode }) {
 	// TO-DO - discussion tab
 	return (
 		<div className="flex gap-12 justify-center ">
 			<span
 				onClick={() => setSection("badges")}
 				className={`${
-					section === "badges" ? "border-t border-black" : "text-gray-400"
-				} 
+					section === "badges"
+						? isDarkMode ? "border-t border-gray-400 text-white" : "border-t border-black text-black"
+						: isDarkMode ? "text-gray-400" : "text-gray-600"
+				}
           py-3 cursor-pointer flex items-center text-[13px] uppercase gap-3 tracking-[1px] font-medium`}
 			>
 				{postsIconFill} Badges
@@ -556,7 +553,9 @@ function Tabs({ section, setSection }) {
 			<span
 				onClick={() => setSection("streak")}
 				className={`${
-					section === "streak" ? "border-t border-black" : "text-gray-400"
+					section === "streak"
+						? isDarkMode ? "border-t border-gray-400 text-white" : "border-t border-black text-black"
+						: isDarkMode ? "text-gray-400" : "text-gray-600"
 				} py-3 cursor-pointer flex items-center text-[13px] uppercase gap-3 tracking-[1px] font-medium`}
 			>
 				{streakIcon} Streak
@@ -564,7 +563,9 @@ function Tabs({ section, setSection }) {
 			<span
 				onClick={() => setSection("list")}
 				className={`${
-					section === "list" ? "border-t border-black" : "text-gray-400"
+					section === "list"
+						? isDarkMode ? "border-t border-gray-400 text-white" : "border-t border-black text-black"
+						: isDarkMode ? "text-gray-400" : "text-gray-600"
 				} py-3 cursor-pointer flex items-center text-[13px] uppercase gap-3 tracking-[1px] font-medium`}
 			>
 				{problemListIcon} List

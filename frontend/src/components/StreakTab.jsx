@@ -1,9 +1,10 @@
 import { axiosInstance } from "../lib/axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { months } from "../constants/variables";
+import { useTheme } from "../hooks/useTheme";
 
-const StreakTab = React.memo(
-	({ userData, selectedYear, setSelectedYear, streakData, setStreakData }) => {
+const StreakTab = ({ userData, selectedYear, setSelectedYear, streakData, setStreakData }) => {
+		const { isDarkMode } = useTheme();
 		const isLeapYear = (year) =>
 			(year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 
@@ -66,13 +67,13 @@ const StreakTab = React.memo(
 					<div className="relative">
 						{/* Top Right Section */}
 						<div className="flex justify-between items-center mb-4 space-x-4">
-							<span className="text-sm font-normal">
+							<span className={`text-sm font-normal ${isDarkMode ? "text-white" : "text-black"}`}>
 								Active days: {streakData.activeDays}
 							</span>
 							<select
 								value={selectedYear}
 								onChange={handleYearChange}
-								className="p-2 border rounded-md text-sm focus:outline-none"
+								className={`p-2 border rounded-md text-sm focus:outline-none ${isDarkMode ? "bg-gray-800 border-gray-700 text-white" : "bg-white border-gray-300 text-black"}`}
 							>
 								{userData.matchedUser.userCalendar.activeYears
 									.slice()
@@ -97,8 +98,10 @@ const StreakTab = React.memo(
 								)
 									return null;
 								return (
-									<div key={index} className="p-4 border rounded-lg bg-gray-50">
-										<h3 className="text-center font-semibold mb-2">
+									<div key={index} className={`p-4 border rounded-lg ${
+										isDarkMode ? "bg-gray-800 border-gray-700" : "bg-gray-50 border-gray-300"
+									}`}>
+										<h3 className={`text-center font-semibold mb-2 ${isDarkMode ? "text-white" : ""}`}>
 											{month.name}
 										</h3>
 										<div className="grid grid-cols-7 gap-1">
@@ -154,7 +157,6 @@ const StreakTab = React.memo(
 				)}
 			</>
 		);
-	}
-);
+};
 
 export default StreakTab;
