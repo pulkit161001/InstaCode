@@ -1,10 +1,10 @@
 ## ✨ Features
 
-### 👤 User Profile Analytics
-### 📚 Study Plan Explorer
-### 💬 Discussion Explorer
-### 🧠 Problem Details Viewer 
-### ⚡ Code Compilation
+# 👤 User Profile Analytics
+# 📚 Study Plan Explorer
+# 💬 Discussion Explorer
+# 🧠 Problem Details Viewer 
+# ⚡ Code Compilation
 
 ---
 
