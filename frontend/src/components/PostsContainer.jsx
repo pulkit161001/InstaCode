@@ -66,7 +66,7 @@ const PostsContainer = () => {
 				//https://github1s.com/jigar-sable/instagram-mern/blob/main/frontend/src/components/Home/PostsContainer.jsx
 				// Display study plans once loading is complete
 				<div className="w-full h-full mt-1 flex flex-col space-y-4">
-					<div className={`rounded-lg p-1 mb-6 w-full border ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}>
+					<div className={`rounded-lg p-4 mb-4 w-full border ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}>
 						<PostStory />
 					</div>
 					{studyplan.map((plan, index) => (
