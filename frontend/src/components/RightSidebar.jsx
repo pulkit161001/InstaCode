@@ -42,7 +42,7 @@ const RightSidebar = () => {
         <p className={`font-semibold text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Contributions</p>
       </div>
 
-      <div className={`${isDarkMode ? "bg-gray-800" : "bg-white"} rounded-lg`}>
+      <div>
         {loading && (
           <div className={`text-center py-4 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
             Loading profile...
@@ -56,12 +56,12 @@ const RightSidebar = () => {
         )}
 
         {profileData && !loading && !error && (
-          <div className={`p-4 rounded-lg ${isDarkMode ? "bg-gray-700" : "bg-gray-50"}`}>
-            <div className="flex items-start gap-3">
+          <div className="flex items-center justify-between py-3">
+            <div className="flex items-center gap-3 flex-1">
               <img
                 src={profileData.userAvatar}
                 alt={`${profileData.realName}'s avatar`}
-                className="w-16 h-16 rounded-full flex-shrink-0"
+                className="w-10 h-10 rounded-full flex-shrink-0"
               />
               <div className="flex-1 min-w-0">
                 <div className={`text-sm font-bold ${isDarkMode ? "text-white" : "text-black"}`}>
@@ -71,15 +71,15 @@ const RightSidebar = () => {
                   {profileData.realName}
                 </div>
               </div>
-              <a
-                href="https://leetcode.com/u/pulkit161001/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`text-sm font-semibold flex-shrink-0 ${isDarkMode ? "text-cyan-400" : "text-blue-500"}`}
-              >
-                Follow
-              </a>
             </div>
+            <a
+              href="https://leetcode.com/u/pulkit161001/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`text-sm font-semibold flex-shrink-0 ml-2 ${isDarkMode ? "text-cyan-400" : "text-blue-500"}`}
+            >
+              Follow
+            </a>
           </div>
         )}
       </div>
