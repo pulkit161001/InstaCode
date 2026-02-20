@@ -69,8 +69,8 @@ const PostsContainer = () => {
 					<div className={`rounded-lg p-4 mb-4 w-full border ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}>
 						<PostStory />
 					</div>
-					{studyplan.map((plan, index) => (
-						<PostItem studyplan={plan} key={index} />
+					{studyplan.map((plan) => (
+						<PostItem studyplan={plan} key={plan.slug} />
 					))}
 					<CaughtUpMessage />
 				</div>
