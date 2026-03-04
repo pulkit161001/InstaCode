@@ -409,9 +409,9 @@ if (process.env.NODE_ENV === "production") {
 	});
 }
 
-app.listen(PORT, () => {
-	console.log(`App is running on PORT ${PORT}`);
-});
+// app.listen(PORT, () => {
+// 	console.log(`App is running on PORT ${PORT}`);
+// });
 
 // TO-DO - this is a confusion i am not able to get tags associate to discussion topic
 async function getDiscussionTopicDetails(topicId) {
@@ -671,3 +671,6 @@ async function getLeetCodeUserYearlyDetails(username, year) {
 		throw new Error("Error fetching user details: " + error.message);
 	}
 }
+
+
+module.exports = app;
