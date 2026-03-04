@@ -673,4 +673,4 @@ async function getLeetCodeUserYearlyDetails(username, year) {
 }
 
 
-module.exports = app;
+export default app;
